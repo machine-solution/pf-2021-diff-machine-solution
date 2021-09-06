@@ -45,11 +45,11 @@ fun longestCommonSubsequence(sequence1: Array<String>, sequence2: Array<String>)
 }
 
 fun diff(sequence1: Array<String>, sequence2: Array<String>): Array<String> {
-    val subsequence: Array<String> = longestCommonSubsequence(sequence1, sequence2);
-    val answer = Array<String>(sequence1.size + sequence2.size - subsequence.size){""}
-    var it1: Int = 0
-    var it2: Int = 0
-    var itAns: Int = 0
+    val subsequence: Array<String> = longestCommonSubsequence(sequence1, sequence2)
+    val answer = Array(sequence1.size + sequence2.size - subsequence.size){""}
+    var it1 = 0
+    var it2 = 0
+    var itAns = 0
 
     for (itSub in subsequence.indices)
     {
