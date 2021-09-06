@@ -1,3 +1,4 @@
+import java.io.File
 import kotlin.math.*
 
 fun longestCommonSubsequenceLength(sequence1: Array<String>, sequence2: Array<String>): Int {
@@ -46,7 +47,7 @@ fun longestCommonSubsequence(sequence1: Array<String>, sequence2: Array<String>)
 
 fun diff(sequence1: Array<String>, sequence2: Array<String>): Array<String> {
     val subsequence: Array<String> = longestCommonSubsequence(sequence1, sequence2)
-    val answer = Array(sequence1.size + sequence2.size - subsequence.size){""}
+    val answer = Array(sequence1.size + sequence2.size - 2 * subsequence.size){""}
     var it1 = 0
     var it2 = 0
     var itAns = 0
@@ -54,23 +55,46 @@ fun diff(sequence1: Array<String>, sequence2: Array<String>): Array<String> {
     for (itSub in subsequence.indices)
     {
         while (it1 < sequence1.size && sequence1[it1] != subsequence[itSub]) {
-            answer[itAns++] = "-| " + sequence1[it1++]
+            answer[itAns++] = "${it1 + 1}-| " + sequence1[it1++]
         }
         ++it1
 
         while (it2 < sequence2.size && sequence2[it2] != subsequence[itSub]) {
-            answer[itAns++] = "+| " + sequence2[it2++]
+            answer[itAns++] = "${it2 + 1}+| " + sequence2[it2++]
         }
         ++it2
 
-        answer[itAns++] = ".| " + subsequence[itSub]
     }
 
     return answer
 }
 
-fun main(args: Array<String>) {
-//   val diff: Array<String> = diff(arrayOf("(a + b)^2", " = ", "a^2 + b^2", "+ 2ab"), arrayOf("(a + b)^2 = ", "a^2", "+ b^2", "+ 2ab"))
-//    for (it in diff.indices)
-//        println(diff[it])
+fun readFileLines(filename: String): Array<String> {
+    fun readList(filename: String): List<String> {
+        return File(filename).readLines()
+    }
+    val list: List<String> =readList(filename)
+    val answer = Array(list.size){""}
+    for (it in answer.indices)
+        answer[it] = list[it]
+
+    return answer
+}
+
+fun writeFileLines(filename: String, lines: Array<String>) {
+    val file = File(filename)
+    if (!file.exists()) {
+        file.createNewFile()
+    }
+    file.writeText("----------------------------SUCCESS----------------------------")
+    for (it in lines.indices)
+        file.appendText('\n' + lines[it])
+}
+
+fun main() {
+    val old = readFileLines("old.txt")
+    val new = readFileLines("new.txt")
+    println("Do not open a file \"result.txt\" while a program is running")
+    writeFileLines("result.txt", diff(old,new))
+    println("You may open a file \"result.txt\" :)")
 }
