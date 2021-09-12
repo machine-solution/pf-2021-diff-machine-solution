@@ -1,6 +1,14 @@
 import java.io.File
 import kotlin.math.*
 
+class DiffLineBlock(var add: Boolean, val first: Int = 0, val last: Int = 0,
+                    val strings: List<String> = List(1){""} ): Comparable<DiffLineBlock> {
+    override fun compareTo(other: DiffLineBlock): Int = if (this.first == other.first)
+        this.last.compareTo(other.last)
+    else
+        first.compareTo(other.first)
+}
+
 fun longestCommonSubsequenceLength(sequence1: Array<String>, sequence2: Array<String>): Int {
     val length: Array<Array<Int>> = Array(sequence1.size + 1) { Array(sequence2.size + 1) { 0 } }
     for (it1 in 1 .. sequence1.size)
@@ -45,42 +53,61 @@ fun longestCommonSubsequence(sequence1: Array<String>, sequence2: Array<String>)
     return subsequence
 }
 
-class DiffLine(private val number: Int = 0, val string: String = "") :Comparable<DiffLine> {
-    override fun compareTo(other: DiffLine): Int = this.number.compareTo(other.number)
-    override fun toString(): String = this.string
-}
-
-fun diff(sequence1: Array<String>, sequence2: Array<String>): Array<DiffLine> {
+fun diff(sequence1: Array<String>, sequence2: Array<String>): List<DiffLineBlock> {
     val subsequence: Array<String> = longestCommonSubsequence(sequence1, sequence2)
-    val answer : Array<DiffLine> = Array(sequence1.size + sequence2.size - 2 * subsequence.size){DiffLine()}
+    val answer : MutableList<DiffLineBlock> = mutableListOf()
+
     var it1 = 0
     var it2 = 0
-    var itAns = 0
 
     for (itSub in subsequence.indices)
     {
-        while (it1 < sequence1.size && sequence1[it1] != subsequence[itSub]) {
-            answer[itAns++] = DiffLine(it1+1,"${it1 + 1}\t\t-| " + sequence1[it1++])
+        if (it1 < sequence1.size && sequence1[it1] != subsequence[itSub]) {
+            val strings = MutableList(0){""}
+            val first = it1 + 1
+            while (it1 < sequence1.size && sequence1[it1] != subsequence[itSub]) {
+               strings.add("${it1 + 1}\t\t-| " + sequence1[it1++])
+            }
+            val last = it1
+            answer.add(DiffLineBlock(false,first,last,strings))
         }
         ++it1
 
-        while (it2 < sequence2.size && sequence2[it2] != subsequence[itSub]) {
-            answer[itAns++] = DiffLine(it2+1,"${it2 + 1}\t\t+| " + sequence2[it2++])
+        if (it2 < sequence2.size && sequence2[it2] != subsequence[itSub]) {
+            val strings = MutableList(0){""}
+            val first = it2 + 1
+            while (it2 < sequence2.size && sequence2[it2] != subsequence[itSub]) {
+                strings.add("${it2 + 1}\t\t+| " + sequence2[it2++])
+            }
+            val last = it2
+            answer.add(DiffLineBlock(true,first,last,strings))
         }
         ++it2
 
     }
+    if (it1 < sequence1.size) {
+        val strings = MutableList(0){""}
+        val first = it1 + 1
+        while (it1 < sequence1.size) {
+            strings.add("${it1 + 1}\t\t-| " + sequence1[it1++])
+        }
+        val last = it1
+        answer.add(DiffLineBlock(true,first,last,strings))
+    }
+
+    if (it2 < sequence2.size) {
+        val strings = MutableList(0){""}
+        val first = it2 + 1
+        while (it2 < sequence2.size) {
+            strings.add("${it2 + 1}\t\t-| " + sequence2[it2++])
+        }
+        val last = it2
+        answer.add(DiffLineBlock(false,first,last,strings))
+    }
+
     answer.sort()
 
     return answer
-}
-
-fun diffLinesToStrings(diffLines: Array<DiffLine>): Array<String> {
-    val strings = Array(diffLines.size){""}
-    for (it in diffLines.indices)
-        strings[it] = diffLines[it].string
-
-    return strings
 }
 
 fun readFileLines(filename: String): Array<String> {
@@ -95,14 +122,23 @@ fun readFileLines(filename: String): Array<String> {
     return answer
 }
 
-fun writeFileLines(filename: String, lines: Array<String>) {
+fun writeFileLines(filename: String, lines: List<DiffLineBlock>) {
+    fun writeDiffLineBlock(filename: String, block: DiffLineBlock) {
+        val file = File(filename)
+        if (block.add)
+            file.appendText('\n' + "\t\t@ a ${block.first}-${block.last} @")
+        else
+            file.appendText('\n' + "\t\t@ d ${block.first}-${block.last} @")
+        for (str in block.strings)
+            file.appendText('\n' + str)
+    }
     val file = File(filename)
     if (!file.exists()) {
         file.createNewFile()
     }
     file.writeText("----------------------------SUCCESS------------------------------------------------------------------------------------")
-    for (it in lines.indices)
-        file.appendText('\n' + lines[it])
+    for (block in lines)
+        writeDiffLineBlock(filename, block)
 }
 
 fun main() {
@@ -112,6 +148,6 @@ fun main() {
     val old = readFileLines("old.txt")
     val new = readFileLines("new.txt")
     println("Do not open a file \"result.txt\" while a program is running")
-    writeFileLines("result.txt", diffLinesToStrings(diff(old,new)))
+    writeFileLines("result.txt", diff(old,new))
     println("You may open a file \"result.txt\" :)")
 }
