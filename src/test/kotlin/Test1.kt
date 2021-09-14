@@ -57,4 +57,14 @@ internal class Test1 {
         checker(3, arrayOf("A", " A", "B", "A ", "B.", "A"), arrayOf("A", "A", "B", "A"))
         checker(4, arrayOf("A", " A", "B", "A ", "B.", "A"), arrayOf("A", " A", "B", "A"))
     }
+
+    @Test
+    fun stressTestDiff() {
+        for (i in 1..9) {
+            val old = readFileLines("in$i.txt")
+            val new = readFileLines("in${i + 1}.txt")
+            writeFileLines("out$i.txt", diff(old,new))
+        }
+
+    }
 }
