@@ -67,4 +67,26 @@ internal class Test1 {
         }
 
     }
+
+    @Test
+    fun speedTestDiff() {
+        val startTime = System.currentTimeMillis() // включаем таймер
+        for (i in 1..2) {
+            val old = readFileLines("src/testing/1_in${i}.txt")
+            val new = readFileLines("src/testing/1_in${i + 1}.txt")
+            writeFileLines("src/testing/1_out$i.txt", diff(old,new))
+        }
+        for (i in 1..3) {
+            val old = readFileLines("src/testing/2_in${i}.txt")
+            val new = readFileLines("src/testing/2_in${i + 1}.txt")
+            writeFileLines("src/testing/2_out$i.txt", diff(old,new))
+        }
+        for (i in 1..5) {
+            val old = readFileLines("src/testing/3_in${i}.txt")
+            val new = readFileLines("src/testing/3_in${i + 1}.txt")
+            writeFileLines("src/testing/3_out$i.txt", diff(old,new))
+        }
+        val totalTime = System.currentTimeMillis() - startTime // выключаем таймер
+        println("**$totalTime**")
+    }
 }

@@ -1,0 +1,108 @@
+----------------------------SUCCESS------------------------------------------------------------------------------------
+@ a 416-431 @
+>     //__________________________________ читы
+>     public static Coord position(int id)
+>     {
+>         return Base.currentPosition.players[id].location;
+>     }
+> 
+>     public static bool wall(int side, int x, int y) //side: 0 == down wall, 1 == left wall of (x,y)
+>     {
+>         return Base.map.walls[side, x, y].getHave();
+>     }
+> 
+>     public static Coord positionOfTeleport(int num) // number of teleport in pair
+>     {
+>         return Base.map.teleport[num];
+>     }
+> 
+@ d 2010 @
+>         { // walls initialization
+@ a 2026 @
+>         { // walls initialization 0 == horizontal, 1 == vertical
+@ a 2955-2956 @
+>     public string currentScene;
+>     public string lastScene;
+@ a 2960-2961 @
+>         lastScene = currentScene;
+>         currentScene = "Menu";
+@ a 2970-2971 @
+>         lastScene = currentScene;
+>         currentScene = "Settings";
+@ a 2979-2980 @
+>         lastScene = currentScene;
+>         currentScene = "Play";
+@ a 2986-2994 @
+>     public void OnScene_TourPlay()
+>     {
+>         lastScene = currentScene;
+>         currentScene = "TourPlay";
+>         InputText.act_id = -1;
+>         Application.LoadLevel("TourPlay");
+>     }
+> 
+>     [System.Obsolete]
+@ a 2997-2998 @
+>         lastScene = currentScene;
+>         currentScene = "End";
+@ a 3006-3007 @
+>         lastScene = currentScene;
+>         currentScene = "End";
+@ a 3015-3016 @
+>         lastScene = currentScene;
+>         currentScene = "Initialization";
+@ a 3022-3030 @
+>     public void OnScene_TourInitialization()
+>     {
+>         lastScene = currentScene;
+>         currentScene = "TourInitialization";
+>         InputText.act_id = -1;
+>         Application.LoadLevel("TourInitialization");
+>     }
+> 
+>     [System.Obsolete]
+@ a 3033-3034 @
+>         lastScene = currentScene;
+>         currentScene = "Map";
+@ a 3042-3043 @
+>         lastScene = currentScene;
+>         currentScene = "Rules";
+@ a 3048-3083 @
+>     [System.Obsolete]
+>     public void OnScene_MP_Menu()
+>     {
+>         lastScene = currentScene;
+>         currentScene = "MP_Menu";
+>         InputText.act_id = -1;
+>         Application.LoadLevel("MP_Menu");
+>     }
+> 
+>     [System.Obsolete]
+>     public void OnScene_MP_Join()
+>     {
+>         lastScene = currentScene;
+>         currentScene = "MP_Join";
+>         InputText.act_id = -1;
+>         Application.LoadLevel("MP_Join");
+>     }
+> 
+>     [System.Obsolete]
+>     public void OnScene_MP_Play()
+>     {
+>         lastScene = currentScene;
+>         currentScene = "MP_Play";
+>         InputText.act_id = -1;
+>         Application.LoadLevel("MP_Play");
+>     }
+> 
+>     [System.Obsolete]
+>     public void OnScene(string scene)
+>     {
+>         lastScene = currentScene;
+>         currentScene = scene;
+>         InputText.act_id = -1;
+>         Application.LoadLevel(scene);
+>     }
+> 
+@ a 3086 @
+>         currentScene = "Menu";

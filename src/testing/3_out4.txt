@@ -1,0 +1,499 @@
+----------------------------SUCCESS------------------------------------------------------------------------------------
+@ a 26-30 @
+>     protected const int GO = 1; //step
+>     protected const int MISS = 0, HIT = 1; //attack
+>     protected const int NO_CHOICE = 0, EXPLORE = 1, TAKE_AFTER_STRIKE = 2, TAKE_AFTER_FIRE = 3,
+>                         CRAZY = 4, GO_TO_KILL = 5; //choice
+>     protected const int MERGE_PRECISION = 2;
+@ d 35 @
+>     public player[] players;
+@ a 40 @
+>     public Player[] players;
+@ d 47 @
+>     public struct player {
+@ a 52 @
+>     public struct Player {
+@ d 70 @
+>         public int[] exit;
+@ a 76 @
+>         public int[] exit;
+@ d 81-88 @
+>         Map(Map B) {
+>             Init(B.size);
+>             B.UpdateBorders();
+>             rank = B.rank;
+>             minx = B.minx; miny = B.miny;
+>             maxx = B.maxx; maxy = B.maxy;
+>             x = B.x; y = B.y;
+>             exit = new int[3] { B.exit[0], B.exit[1], B.exit[2] };
+@ a 86-93 @
+>         Map(Map A) {
+>             Init(A.size);
+>             A.UpdateBorders();
+>             rank = A.rank;
+>             minx = A.minx; miny = A.miny;
+>             maxx = A.maxx; maxy = A.maxy;
+>             x = A.x; y = A.y;
+>             exit = new int[3] { A.exit[0], A.exit[1], A.exit[2] };
+@ d 91-92 @
+>                     can_to_move[i, j, 0] = B.can_to_move[i, j, 0];
+>                     can_to_move[i, j, 1] = B.can_to_move[i, j, 1];
+@ a 96-97 @
+>                     can_to_move[i, j, 0] = A.can_to_move[i, j, 0];
+>                     can_to_move[i, j, 1] = A.can_to_move[i, j, 1];
+@ d 188 @
+>         players = new player[Players];
+@ a 193 @
+>         players = new Player[Players];
+@ d 257-258 @
+>         if (knifes > 0 && rand.Next(5) == 0 && Have(FREE)) { ansType = "strike"; ansSide = Random(FREE); choice = 0; }
+>         else if (bullets > 0 && rand.Next(15) == 0 && Have(FREE)) { ansType = "fire"; ansSide = Random(FREE); choice = 0; }
+@ a 262-263 @
+>         if (knifes > 0 && rand.Next(5) == 0 && Have(FREE)) { ansType = "strike"; ansSide = Random(FREE); choice = NO_CHOICE; }
+>         else if (bullets > 0 && rand.Next(15) == 0 && Have(FREE)) { ansType = "fire"; ansSide = Random(FREE); choice = NO_CHOICE; }
+@ d 266 @
+>                 if (v[0] == a && v[1] == b) choice = 0;
+@ d 270 @
+>                 choice = 0;
+@ a 271 @
+>                 if (v[0] == a && v[1] == b) choice = NO_CHOICE;
+@ a 275 @
+>                 choice = NO_CHOICE;
+@ d 277-280 @
+>         if (choice == 0) UpdateChoice();
+>         if (choice == 1 || choice == 5) GoToV();
+>         if (choice == 2 || choice == 3) { ansType = "step"; ansSide = sides[k]; }
+>         if (choice == 4) {
+@ a 282-285 @
+>         if (choice == NO_CHOICE) UpdateChoice();
+>         if (choice == EXPLORE || choice == GO_TO_KILL) GoToV();
+>         if (choice == TAKE_AFTER_STRIKE || choice == TAKE_AFTER_FIRE) { ansType = "step"; ansSide = sides[k]; }
+>         if (choice == CRAZY) {
+@ d 301 @
+>                 choice = 1;
+@ a 306 @
+>                 choice = EXPLORE;
+@ d 308 @
+>                 choice = 1;
+@ a 313 @
+>                 choice = EXPLORE;
+@ d 320 @
+>     protected string random(int form, int i, int j) {
+@ a 325 @
+>     protected string Random(int form, int i, int j) {
+@ d 332 @
+>     protected string Random(int form) => random(form, my_map.x, my_map.y);
+@ d 334-336 @
+>         if (s == "wall\n") return 0;
+>         else if (s == "exit\n" || s == "hit\n") return 2;
+>         else return 1;
+@ a 337 @
+>     protected string Random(int form) => Random(form, my_map.x, my_map.y);
+@ a 339-345 @
+>         switch (s) {
+>             case "wall\n": return WALL;
+>             case "exit\n": return EXIT;
+>             case "hit\n": return HIT;
+>             case "miss\n": return MISS;
+>             default: return 1;
+>         }
+@ d 370 @
+>     protected Map Merge(Map A, Map B) {
+@ d 374 @
+>         int gxa = 0, gya = 0, gxb = 0, gyb = 0;
+@ a 379-382 @
+>     /// <summary>
+>     /// Попытка совместить две карты с вероятностью хотя бы 1/k, обновляет первый аргумент
+>     /// </summary>
+>     protected void Merge(ref Map A, Map B, int k = 1) {
+@ a 386 @
+>         List<int> gxa = new List<int>(), gya = new List<int>(), gxb = new List<int>(), gyb = new List<int>();
+@ d 427 @
+>                             ++var; gxa = ia; gya = ja; gxb = ib; gyb = jb;
+@ d 429 @
+>                         if (var > 1) return A;
+@ d 431-432 @
+>         if (var == 1) {
+>             int x = A.minx - B.minx + gxb - gxa, y = A.miny - B.miny + gyb - gya;
+@ a 439 @
+>                             ++var; gxa.Add(ia); gya.Add(ja); gxb.Add(ib); gyb.Add(jb);
+@ a 441 @
+>                         if (var > k) return;
+@ a 443-445 @
+>         if (var > 0) {
+>             int r = rand.Next(var);
+>             int x = A.minx - B.minx + gxb[r] - gxa[r], y = A.miny - B.miny + gyb[r] - gya[r];
+@ d 446 @
+>             void DFS(int a, int b) {
+@ d 448-453 @
+>                 if (a < A.minx) A.minx = a; if (a > A.maxx) A.maxx = a;
+>                 if (b < A.miny) A.miny = b; if (b > A.maxy) A.maxy = b;
+>                 if (A.Can(a, b, 0) == 1) if (!used[a - 1, b]) DFS(a - 1, b);
+>                 if (A.Can(a, b, 1) == 1) if (!used[a, b - 1]) DFS(a, b - 1);
+>                 if (A.Can(a, b, 2) == 1) if (!used[a + 1, b]) DFS(a + 1, b);
+>                 if (A.Can(a, b, 3) == 1) if (!used[a, b + 1]) DFS(a, b + 1);
+@ d 455-456 @
+>             DFS(A.minx, A.miny);
+>             Spy_d(x, y);
+@ d 458-459 @
+>         A.UpdateBorders();
+>         if (var == 0 || A.exit[0] == -2) { GetInfoB(); return my_map; } else return A;
+@ a 459 @
+>             void DFS(ref Map map, int a, int b) {
+@ a 461-466 @
+>                 if (a < map.minx) map.minx = a; if (a > map.maxx) map.maxx = a;
+>                 if (b < map.miny) map.miny = b; if (b > map.maxy) map.maxy = b;
+>                 if (map.Can(a, b, 0) == 1) if (!used[a - 1, b]) DFS(ref map, a - 1, b);
+>                 if (map.Can(a, b, 1) == 1) if (!used[a, b - 1]) DFS(ref map, a, b - 1);
+>                 if (map.Can(a, b, 2) == 1) if (!used[a + 1, b]) DFS(ref map, a + 1, b);
+>                 if (map.Can(a, b, 3) == 1) if (!used[a, b + 1]) DFS(ref map, a, b + 1);
+@ a 468-471 @
+>             DFS(ref A, A.minx, A.miny);
+>             A.UpdateBorders();
+>             if (A.exit[0] == -2) { GetInfoB(); return; }
+>             Spy_detect(x, y);
+@ a 473 @
+>         else GetInfoB();
+@ d 491 @
+>         choice = 0;
+@ d 497 @
+>     protected void UpdateCan_and_xy(int game, int k) //only for "step"
+@ d 499 @
+>         if (choice != 4) {
+@ d 501 @
+>             if (game == 0) {
+@ a 505 @
+>         choice = NO_CHOICE;
+@ d 507 @
+>             if (game == 1) {
+@ a 511 @
+>     protected void UpdateCan_and_xy(int gameAns, int k) //only for "step"
+@ a 513 @
+>         if (choice != CRAZY) {
+@ a 515 @
+>             if (gameAns == WALL) {
+@ d 515 @
+>             if (game == 2) {
+@ a 521 @
+>             if (gameAns == GO) {
+@ d 526-527 @
+>             if (choice == 2) choice = 0;
+>             if (choice == 3 && (Check.treasures(my_id) > treasures || game == 0)) choice = 0;
+@ a 529 @
+>             if (gameAns == EXIT) {
+@ d 531-532 @
+>             choice = 0;
+>             if (game == 1) {
+@ a 540-541 @
+>             if (choice == TAKE_AFTER_STRIKE) choice = NO_CHOICE;
+>             if (choice == TAKE_AFTER_FIRE && (Check.treasures(my_id) > treasures || gameAns == WALL)) choice = NO_CHOICE;
+@ d 541 @
+>             int game = GameAns(gameAns_id); k = SideToNum(ansSide_id);
+@ d 544 @
+>                     bool A = Check.treasures(my_id) == 0 && (players[my_id].B.Can(players[my_id].B.x, players[my_id].B.y, (k + 2) % 4) > -1 || players[id].choice == 4);
+@ a 545-546 @
+>             choice = NO_CHOICE;
+>             if (gameAns == GO) {
+@ a 555 @
+>             int gameAns = GameAns(gameAns_id); k = SideToNum(ansSide_id);
+@ a 558 @
+>                     bool A = Check.treasures(my_id) == 0 && (players[my_id].B.Can(players[my_id].B.x, players[my_id].B.y, (k + 2) % 4) >= 0 || players[id].choice == CRAZY);
+@ d 560 @
+>                                 hosp_map = Merge(hosp_map, players[my_id].A);
+@ d 573 @
+>                         if (armors != Check.armors(my_id) && ansType_id == "strike" && players[id].choice != 4) {
+@ a 574 @
+>                                 Merge(ref hosp_map, players[my_id].B);
+@ a 587 @
+>                         if (armors != Check.armors(my_id) && ansType_id == "strike" && players[id].choice != CRAZY) {
+@ d 588 @
+>                             choice = 4;
+@ d 595 @
+>                         bool A = players[i].B.Can(players[i].B.x, players[i].B.y, (k + 2) % 4) > -1 || players[id].choice == 4;
+@ d 598 @
+>                                 bool B = players[id].choice != 4 && (id != my_id || choice != 4);
+@ a 602 @
+>                             choice = CRAZY;
+@ a 609 @
+>                         bool A = players[i].B.Can(players[i].B.x, players[i].B.y, (k + 2) % 4) > -1 || players[id].choice == CRAZY;
+@ a 612 @
+>                                 bool B = players[id].choice != CRAZY && (id != my_id || choice != CRAZY);
+@ a 620 @
+>                                     Add(players[i].B, players[id].B, -dx, -dy);
+@ d 620 @
+>                         else if (A) players[i].choice = 4;
+@ d 625 @
+>                     if (choice != 4) {
+@ d 627-630 @
+>                             if (game == 0) { players[my_id].B.UpdateCan(WALL, k); GetInfoB(); } //lose knife
+>                             else if (game == 2 && SmbLosed()) {
+>                                 if (ansType_id == "strike") choice = 2;
+>                                 if (ansType_id == "fire") choice = 3;
+@ d 633 @
+>                         else if (game == 2) choice = 4;
+@ a 635 @
+>                         else if (A) players[i].choice = CRAZY;
+@ d 636-638 @
+>                         if (game == 2 && SmbLosed()) {
+>                             if (ansType_id == "strike") choice = 2;
+>                             if (ansType_id == "fire") choice = 3;
+@ a 640 @
+>                     if (choice != CRAZY) {
+@ d 640 @
+>                         else choice = 0;
+@ d 642-643 @
+>                     else if (game != 2) choice = 0;
+>                     else choice = 4;
+@ a 642-645 @
+>                             if (gameAns == WALL) { players[my_id].B.UpdateCan(WALL, k); GetInfoB(); } //lose knife
+>                             else if (gameAns == HIT && SmbLosed()) {
+>                                 if (ansType_id == "strike") choice = TAKE_AFTER_STRIKE;
+>                                 if (ansType_id == "fire") choice = TAKE_AFTER_FIRE;
+@ d 645-648 @
+>                 else UpdateCan_and_xy(game, k);
+>                 my_map = Merge(my_map, players[my_id].A);
+>                 players[my_id].B = Merge(players[my_id].B, players[my_id].A);
+>                 players[my_id].A = Merge(players[my_id].A, players[my_id].B);
+@ a 648 @
+>                         else if (gameAns == HIT) choice = CRAZY;
+@ a 651-653 @
+>                         if (gameAns == HIT && SmbLosed()) {
+>                             if (ansType_id == "strike") choice = TAKE_AFTER_STRIKE;
+>                             if (ansType_id == "fire") choice = TAKE_AFTER_FIRE;
+@ d 654-656 @
+>                     if (ansType_id != "throw" && players[id].choice == 4) players[id].choice = 0;
+>                     if (ansType_id == "throw" && (players[id].B.Can(x, y, k) != 1 || players[id].choice == 4))
+>                         players[id].choice = 4;
+@ a 655 @
+>                         else choice = NO_CHOICE;
+@ a 657 @
+>                     else choice = gameAns != EXIT ? 0 : 4;
+@ a 659-661 @
+>                 else UpdateCan_and_xy(gameAns, k);
+>                 Merge(ref my_map, players[my_id].A, MERGE_PRECISION);
+>                 Merge(ref players[my_id].A, players[my_id].B, MERGE_PRECISION);
+@ d 660 @
+>                         if (players[id].choice != 4) {
+@ d 662 @
+>                             if (game == 0) {
+@ d 666 @
+>                             if (game == 1) {
+@ a 667-669 @
+>                     if (ansType_id != "throw" && players[id].choice == CRAZY) players[id].choice = NO_CHOICE;
+>                     if (ansType_id == "throw" && (players[id].B.Can(x, y, k) != 1 || players[id].choice == CRAZY))
+>                         players[id].choice = CRAZY;
+@ d 671 @
+>                             if (game == 2) {
+@ a 673 @
+>                         if (players[id].choice != CRAZY) {
+@ a 675 @
+>                             if (gameAns == WALL) {
+@ a 679 @
+>                             if (gameAns == GO) {
+@ a 684 @
+>                             if (gameAns == EXIT) {
+@ d 685-686 @
+>                             players[id].choice = 0;
+>                             if (game == 1) {
+@ d 689 @
+>                                 players[id].choice = 0;
+@ d 695-699 @
+>                     else { if (players[id].choice == 4) players[id].choice = 0; }
+>                     players[my_id].B = Merge(players[my_id].B, players[id].A);
+>                     players[my_id].B = Merge(players[my_id].B, players[id].B);
+>                     my_map = Merge(my_map, players[id].A);
+>                     my_map = Merge(my_map, players[id].B);
+@ a 698-699 @
+>                             players[id].choice = NO_CHOICE;
+>                             if (gameAns == GO) {
+@ a 702 @
+>                                 players[id].choice = NO_CHOICE;
+@ a 708-711 @
+>                     else { if (players[id].choice == CRAZY) players[id].choice = NO_CHOICE; }
+>                     Merge(ref players[my_id].B, players[id].B);
+>                     Merge(ref my_map, players[id].A, MERGE_PRECISION);
+>                     Merge(ref my_map, players[id].B, MERGE_PRECISION);
+@ d 717 @
+>     protected virtual void Spy_d(int a, int b) { }
+@ a 729 @
+>     protected virtual void Spy_detect(int a, int b) { }
+@ d 740 @
+>     new player[] players;
+@ a 752 @
+>     new Player[] players;
+@ d 753 @
+>     new struct player {
+@ a 765 @
+>     new struct Player {
+@ a 768-781 @
+>     new struct Map {
+>         public int a, b;
+>         public int[,,] can;
+>         public int[] exit;
+>         public Map(int x) {
+>             a = b = -1;
+>             can = new int[x + 1, x + 1, 2];
+>             exit = new int[3];
+>             exit[0] = -1;
+>         }
+>         public void Coord(int x, int y) {
+>             a = x; b = y;
+>         }
+>     }
+@ d 784 @
+>         players = new player[the_players];
+@ a 810 @
+>         players = new Player[the_players];
+@ d 841 @
+>             if (v[0] == a && v[1] == b) choice = 0;
+@ d 847-849 @
+>         if (choice == 1) GoToV();
+>         else if (choice == 2) {
+>             ansType = types[STEP]; ansSide = sides[k]; choice = 0;
+@ d 854 @
+>                 choice = 1;
+@ d 859 @
+>     protected new string Random(int form) => random(form, x, y);
+@ d 861 @
+>         if (choice == 0) {
+@ a 867 @
+>             if (v[0] == a && v[1] == b) choice = NO_CHOICE;
+@ d 872 @
+>                     choice = 1;
+@ a 873-875 @
+>         if (choice == EXPLORE) GoToV();
+>         else if (choice == TAKE_AFTER_STRIKE) {
+>             ansType = types[STEP]; ansSide = sides[k]; choice = NO_CHOICE;
+@ a 880 @
+>                 choice = EXPLORE;
+@ d 881 @
+>                         choice = 1;
+@ a 885 @
+>     protected new string Random(int form) => Random(form, x, y);
+@ a 887 @
+>         if (choice == NO_CHOICE) {
+@ d 889-891 @
+>         if (s == "wall\n") return 0;
+>         else if (s == "exit\n" || s == "hit\n") return 2;
+>         else return 1;
+@ d 897-913 @
+>     new struct Map {
+>         public int a, b;
+>         public int[,,] can;
+>         public int[] exit;
+>         public Map(int x) {
+>             a = b = -1;
+>             can = new int[x + 1, x + 1, 2];
+>             exit = new int[3];
+>             exit[0] = -1;
+>         }
+>         public void Coord(int x, int y) {
+>             a = x; b = y;
+>         }
+>     }
+>     protected new void UpdateCan_and_xy(int game, int k) {
+>         if (choice == 4) {
+>             if (game != 1) choice = 0;
+@ a 898 @
+>                     choice = EXPLORE;
+@ a 907 @
+>                         choice = EXPLORE;
+@ a 915-921 @
+>         switch (s) {
+>             case "wall\n": return WALL;
+>             case "exit\n": return EXIT;
+>             case "hit\n": return HIT;
+>             case "miss\n": return MISS;
+>             default: return 1;
+>         }
+@ d 918-921 @
+>                 if (x == exit[0] && y == exit[1] && game != 2) Reload();
+>                 else if (game == 0) Reload();
+>                 else if (game == 1) move(k);
+>                 else if (game == 2) { doubt = false; x = exit[0]; y = exit[1]; choice = 0; }
+@ d 925-927 @
+>                 if (game == 0) { updateCan(-1, k); }
+>                 if (game == 1) { updateCan(1, k); move(k); }
+>                 if (game == 2) { updateCan(-1, k); exit[0] = x; exit[1] = y; exit[2] = k; }
+@ a 927-929 @
+>     protected new void UpdateCan_and_xy(int gameAns, int k) {
+>         if (choice == CRAZY) {
+>             if (gameAns != GO) choice = NO_CHOICE;
+@ d 934 @
+>             int game = GameAns(gameAns_id); k = SideToNum(ansSide_id);
+@ a 934-937 @
+>                 if (x == exit[0] && y == exit[1] && gameAns != EXIT) Reload();
+>                 else if (gameAns == WALL) Reload();
+>                 else if (gameAns == GO) move(k);
+>                 else if (gameAns == EXIT) { doubt = false; x = exit[0]; y = exit[1]; choice = NO_CHOICE; }
+@ d 937-939 @
+>                     if (game == 2 && SmbLosed()) choice = 2;
+>                     if (game == 0 && choice != 4) Reload();
+>                     if (choice == 4) choice = 0;
+@ d 941 @
+>                 else UpdateCan_and_xy(game, k);
+@ a 941-943 @
+>                 if (gameAns == WALL) { updateCan(-1, k); }
+>                 if (gameAns == GO) { updateCan(1, k); move(k); }
+>                 if (gameAns == EXIT) { updateCan(-1, k); exit[0] = x; exit[1] = y; exit[2] = k; }
+@ d 948 @
+>                         choice = 4;
+@ a 950 @
+>             int gameAns = GameAns(gameAns_id); k = SideToNum(ansSide_id);
+@ a 953-955 @
+>                     if (gameAns == HIT && SmbLosed()) choice = TAKE_AFTER_STRIKE;
+>                     if (gameAns == WALL && choice != CRAZY) Reload();
+>                     if (choice == CRAZY) choice = NO_CHOICE;
+@ d 955 @
+>                             if (x == v[0] && y == v[1]) choice = 0;
+@ a 957 @
+>                 else UpdateCan_and_xy(gameAns, k);
+@ d 959 @
+>                                 choice = 1;
+@ a 964 @
+>                         choice = CRAZY;
+@ a 971 @
+>                             if (x == v[0] && y == v[1]) choice = NO_CHOICE;
+@ a 975 @
+>                                 choice = EXPLORE;
+@ d 1019 @
+>         my_map = Merge(my_map, players[id].B);
+@ d 1025 @
+>     protected override void Spy_d(int a, int b) {
+@ d 1030 @
+>         if (choice != 4 && (knifes + bullets > 0)) {
+@ a 1035 @
+>         Merge(ref my_map, players[id].B, MERGE_PRECISION);
+@ a 1041 @
+>     protected override void Spy_detect(int a, int b) {
+@ d 1041 @
+>                             void Win(int xx) { ansSide = sides[xx]; ansType = "strike"; profit = players[i].treasures; choice = 0; hit = true; }
+@ a 1046 @
+>         if (choice != CRAZY && (knifes + bullets > 0)) {
+@ d 1048 @
+>                             void Win(int xx) { ansSide = sides[xx]; ansType = "fire"; profit = players[i].treasures; choice = 0; hit = true; }
+@ a 1057 @
+>                             void Win(int xx) { ansSide = sides[xx]; ansType = "strike"; profit = players[i].treasures; choice = NO_CHOICE; hit = true; }
+@ a 1064 @
+>                             void Win(int xx) { ansSide = sides[xx]; ansType = "fire"; profit = players[i].treasures; choice = NO_CHOICE; hit = true; }
+@ d 1090 @
+>             if (spy && !hit && choice != 2 && choice != 3 && (3 * treasures <= Treasures - SumOut() || my_map.exit[0] < 0))// && treasures==0)
+@ d 1103 @
+>                     choice = 5;
+@ d 1106 @
+>                 else if (choice == 5) { choice = 0; UpdateAns(); }
+@ a 1106-1107 @
+>             if (spy && !hit && choice != TAKE_AFTER_STRIKE && choice != TAKE_AFTER_FIRE 
+>                 && (3 * treasures <= Treasures - SumOut() || my_map.exit[0] < 0))// && treasures==0)
+@ d 1108 @
+>             if (!hit && ansType != "step" && choice == 0) UpdateAns();
+@ a 1120 @
+>                     choice = GO_TO_KILL;
+@ a 1123 @
+>                 else if (choice == GO_TO_KILL) { choice = NO_CHOICE; UpdateAns(); }
+@ a 1125 @
+>             if (!hit && ansType != "step" && choice == NO_CHOICE) UpdateAns();
+@ d 1148 @
+>         public static bool operator !=(point p1, point p2) => (p1.x != p2.x || p1.y != p2.y);
+@ a 1165 @
+>         public static bool operator !=(point p1, point p2) => p1.x != p2.x || p1.y != p2.y;
