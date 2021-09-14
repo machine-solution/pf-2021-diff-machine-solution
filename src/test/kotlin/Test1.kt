@@ -61,9 +61,9 @@ internal class Test1 {
     @Test
     fun stressTestDiff() {
         for (i in 1..9) {
-            val old = readFileLines("in$i.txt")
-            val new = readFileLines("in${i + 1}.txt")
-            writeFileLines("out$i.txt", diff(old,new))
+            val old = readFileLines("src/testing/in$i.txt")
+            val new = readFileLines("src/testing/in${i + 1}.txt")
+            writeFileLines("src/testing/out$i.txt", diff(old,new))
         }
 
     }

@@ -1,0 +1,45 @@
+----------------------------SUCCESS------------------------------------------------------------------------------------
+@ d 48 @
+> fun diff(sequence1: Array<String>, sequence2: Array<String>): Array<String> {
+@ a 48-53 @
+> class DiffLine(private val number: Int = 0, val string: String = "") :Comparable<DiffLine> {
+>     override fun compareTo(other: DiffLine): Int = this.number.compareTo(other.number)
+>     override fun toString(): String = this.string
+> }
+> 
+> fun diff(sequence1: Array<String>, sequence2: Array<String>): Array<DiffLine> {
+@ d 50 @
+>     val answer = Array(sequence1.size + sequence2.size - 2 * subsequence.size){""}
+@ a 55 @
+>     val answer : Array<DiffLine> = Array(sequence1.size + sequence2.size - 2 * subsequence.size){DiffLine()}
+@ d 58 @
+>             answer[itAns++] = "${it1 + 1}-| " + sequence1[it1++]
+@ a 63 @
+>             answer[itAns++] = DiffLine(it1+1,"${it1 + 1}\t\t-| " + sequence1[it1++])
+@ d 63 @
+>             answer[itAns++] = "${it2 + 1}+| " + sequence2[it2++]
+@ a 68 @
+>             answer[itAns++] = DiffLine(it2+1,"${it2 + 1}\t\t+| " + sequence2[it2++])
+@ a 73 @
+>     answer.sort()
+@ a 78-85 @
+> fun diffLinesToStrings(diffLines: Array<DiffLine>): Array<String> {
+>     val strings = Array(diffLines.size){""}
+>     for (it in diffLines.indices)
+>         strings[it] = diffLines[it].string
+> 
+>     return strings
+> }
+> 
+@ d 89 @
+>     file.writeText("----------------------------SUCCESS----------------------------")
+@ d 98 @
+>     writeFileLines("result.txt", diff(old,new))
+@ a 103 @
+>     file.writeText("----------------------------SUCCESS------------------------------------------------------------------------------------")
+@ a 109-111 @
+>     println("Place an old- and new-version of your file in the files \"old.txt\" and \"new.txt\" respectively")
+>     println("and press ENTER...")
+>     readLine()
+@ a 115 @
+>     writeFileLines("result.txt", diffLinesToStrings(diff(old,new)))
