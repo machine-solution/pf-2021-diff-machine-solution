@@ -66,7 +66,7 @@ fun diff(sequence1: Array<String>, sequence2: Array<String>): List<DiffLineBlock
             val strings = MutableList(0){""}
             val first = it1 + 1
             while (it1 < sequence1.size && sequence1[it1] != subsequence[itSub]) {
-               strings.add("${it1 + 1}\t\t-| " + sequence1[it1++])
+               strings.add(sequence1[it1++])
             }
             val last = it1
             answer.add(DiffLineBlock(false,first,last,strings))
@@ -77,7 +77,7 @@ fun diff(sequence1: Array<String>, sequence2: Array<String>): List<DiffLineBlock
             val strings = MutableList(0){""}
             val first = it2 + 1
             while (it2 < sequence2.size && sequence2[it2] != subsequence[itSub]) {
-                strings.add("${it2 + 1}\t\t+| " + sequence2[it2++])
+                strings.add(sequence2[it2++])
             }
             val last = it2
             answer.add(DiffLineBlock(true,first,last,strings))
@@ -89,7 +89,7 @@ fun diff(sequence1: Array<String>, sequence2: Array<String>): List<DiffLineBlock
         val strings = MutableList(0){""}
         val first = it1 + 1
         while (it1 < sequence1.size) {
-            strings.add("${it1 + 1}\t\t-| " + sequence1[it1++])
+            strings.add(sequence1[it1++])
         }
         val last = it1
         answer.add(DiffLineBlock(true,first,last,strings))
@@ -99,7 +99,7 @@ fun diff(sequence1: Array<String>, sequence2: Array<String>): List<DiffLineBlock
         val strings = MutableList(0){""}
         val first = it2 + 1
         while (it2 < sequence2.size) {
-            strings.add("${it2 + 1}\t\t-| " + sequence2[it2++])
+            strings.add(sequence2[it2++])
         }
         val last = it2
         answer.add(DiffLineBlock(false,first,last,strings))
@@ -126,11 +126,11 @@ fun writeFileLines(filename: String, lines: List<DiffLineBlock>) {
     fun writeDiffLineBlock(filename: String, block: DiffLineBlock) {
         val file = File(filename)
         if (block.add)
-            file.appendText('\n' + "\t\t@ a ${block.first}-${block.last} @")
+            file.appendText('\n' + "@ a ${block.first}-${block.last} @")
         else
-            file.appendText('\n' + "\t\t@ d ${block.first}-${block.last} @")
+            file.appendText('\n' + "@ d ${block.first}-${block.last} @")
         for (str in block.strings)
-            file.appendText('\n' + str)
+            file.appendText("\n> $str")
     }
     val file = File(filename)
     if (!file.exists()) {
