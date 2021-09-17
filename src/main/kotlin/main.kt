@@ -33,11 +33,8 @@ fun longestCommonSubsequence(sequence1: Array<String>, sequence2: Array<String>)
             it1--
             it2--
         }
-        else if (length[it1 - 1][it2] > length[it1][it2 - 1]) {
+        else{
             it1--
-        }
-        else {
-            it2--
         }
     }
 
