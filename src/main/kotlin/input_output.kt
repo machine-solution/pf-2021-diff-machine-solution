@@ -43,8 +43,11 @@ fun readFileUsingPath(fileAlias: String): Array<String> {
     println("Enter the path of $fileAlias")
     var path = readLine()
     var file = File(path)
-    while (path == null || !file.exists()) {
-        println("The path of file is incorrect. Please, try again.")
+    while (path == null || !file.exists() || path.substring(path.length - 4) != ".txt") {
+        if (path == null || !file.exists())
+            println("The path of file is incorrect. Please, try again.")
+        else
+            println("You entered the path to a non-text file. Please, try again.")
         path = readLine()
         file = File(path)
     }

@@ -30,7 +30,7 @@ internal class Test1 {
             }
             return it1 == subsequence.size
         }
-
+        // Проверяем, является ли answer подстрокой и sequence1 и sequence2
         return if (isSubsequence(answer, sequence1) && isSubsequence(answer, sequence2)) {
            answer.size
         } else {

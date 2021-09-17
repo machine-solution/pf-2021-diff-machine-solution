@@ -126,4 +126,5 @@ fun main() {
     println("Do not open a file \"result.txt\" while a program is running")
     writeFileLines("result.txt", diff(old,new))
     println("Difference of old- and new-files is located in the file \"result.txt\"")
+    println("You can open the file \"result.txt\"")
 }
