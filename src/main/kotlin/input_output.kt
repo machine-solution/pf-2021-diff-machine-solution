@@ -39,18 +39,30 @@ fun writeFileLines(filename: String, lines: List<DiffLineBlock>) {
 }
 
 // Просит вводить путь к файлу, называя его fileAlias, пока пользователь не введёт корректный путь
-fun readFileUsingPath(fileAlias: String): Array<String> {
+fun getCorrectPath(fileAlias: String): String {
     println("Enter the path of $fileAlias")
     var path = readLine()
     var file = File(path)
-    while (path == null || !file.exists() || path.substring(path.length - 4) != ".txt") {
-        if (path == null || !file.exists())
+    while (path == null || !file.isFile) {
+        if (path == null)
             println("The path of file is incorrect. Please, try again.")
         else
-            println("You entered the path to a non-text file. Please, try again.")
+            println("Unable to convert file to text. Please, the path of another file.")
         path = readLine()
         file = File(path)
     }
 
-    return readFileLines(path.toString())
+    return path.toString()
+}
+
+// Читает файл, путь к которому указал пользователь
+fun readFileUsingPath(fileAlias: String): Array<String> {
+    val path = getCorrectPath(fileAlias)
+    return readFileLines(path)
+}
+
+// Записывает lines в файл, путь к которому указал пользователь
+fun writeFileUsingPath(fileAlias: String, lines: List<DiffLineBlock>) {
+    val path = getCorrectPath(fileAlias)
+    writeFileLines(path, lines)
 }
