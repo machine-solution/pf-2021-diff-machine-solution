@@ -125,7 +125,7 @@ fun readFileLines(filename: String): Array<String> {
 fun writeFileLines(filename: String, lines: List<DiffLineBlock>) {
     fun writeDiffLineBlock(filename: String, block: DiffLineBlock) {
         val file = File(filename)
-        val ind = if (block.first != block.last) "${block.first}-${block.last}" else "${block.first}"
+        var ind = if (block.first != block.last) "${block.first}-${block.last}" else "${block.first}"
         if (block.add)
             file.appendText("\n@ a $ind @")
         else
