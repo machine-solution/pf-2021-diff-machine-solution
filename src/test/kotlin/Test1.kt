@@ -1,10 +1,6 @@
 import kotlin.random.Random
 import kotlin.test.*
 
-
-
-
-
 internal class Test1 {
 
     @Test
@@ -20,7 +16,7 @@ internal class Test1 {
         assertEquals(0, longestCommonSubsequenceLength(arrayOf("B", "A", "N", "A", "N", "A"), arrayOf()))
     }
 
-    // if answer is a common subsequence, return answer.size, else return -1
+    // if "answer" is a common subsequence, return answer.size, else return -1
     private fun longestCommonSubsequenceChecker(sequence1: Array<String>, sequence2: Array<String>, answer: Array<String>): Int {
         fun isSubsequence(subsequence: Array<String>, sequence: Array<String>): Boolean {
             var it1 = 0
@@ -89,17 +85,36 @@ internal class Test1 {
             val new = readFileLines("src/testing/1_in${i + 1}.txt")
             writeFileLines("src/testing/1_out$i.txt", diff(old,new))
         }
+        val time1 = System.currentTimeMillis()
         for (i in 1..3) {
             val old = readFileLines("src/testing/2_in${i}.txt")
             val new = readFileLines("src/testing/2_in${i + 1}.txt")
             writeFileLines("src/testing/2_out$i.txt", diff(old,new))
         }
+        val time2 = System.currentTimeMillis()
         for (i in 1..5) {
             val old = readFileLines("src/testing/3_in${i}.txt")
             val new = readFileLines("src/testing/3_in${i + 1}.txt")
             writeFileLines("src/testing/3_out$i.txt", diff(old,new))
         }
-        val totalTime = System.currentTimeMillis() - startTime // выключаем таймер
-        println("**$totalTime**")
+        val time3 = System.currentTimeMillis()
+        for (i in 1..9) {
+            val old = readFileLines("src/testing/in$i.txt")
+            val new = readFileLines("src/testing/in${i + 1}.txt")
+            writeFileLines("src/testing/out$i.txt", diff(old,new))
+        }
+        val time4 = System.currentTimeMillis()
+
+        println("9 comparisons of files with length about n = 100 lines produced in ${time4 - time3} ms")
+        println("1 comparison produced in about ${"%.6f".format((time4 - time3)/(9.0*100*100))} * n^2 ms\n")
+
+        println("3 comparisons of files with length about n = 300 lines produced in ${time2 - time1} ms")
+        println("1 comparison produced in about ${"%.6f".format((time2 - time1)/(3.0*300*300))} * n^2 ms\n")
+
+        println("5 comparisons of files with length about n = 1100 lines produced in ${time3 - time2} ms")
+        println("1 comparison produced in about ${"%.6f".format((time3 - time2)/(5.0*1100*1100))} * n^2 ms\n")
+
+        println("2 comparisons of files with length about n = 3000 lines produced in ${time1 - startTime} ms")
+        println("1 comparison produced in about ${"%.6f".format((time1 - startTime)/(2.0*3000*3000))} * n^2 ms\n")
     }
 }

@@ -1,5 +1,8 @@
 import kotlin.math.*
 
+// Блок последовательных удаляемых или добавляемых строк под номерами с first по last, включая обе границы
+// add = true, если строки блока добавляются, add = false, если строки блока удаляются
+// strings - массив строк размера last - first + 1 - строки блока
 class DiffLineBlock(var add: Boolean, val first: Int = 0, val last: Int = 0,
                     val strings: List<String> = List(1){""} ): Comparable<DiffLineBlock> {
     override fun compareTo(other: DiffLineBlock): Int = if (this.first == other.first)
@@ -8,6 +11,7 @@ class DiffLineBlock(var add: Boolean, val first: Int = 0, val last: Int = 0,
         first.compareTo(other.first)
 }
 
+// Возвращает длину наибольшей общей подпоследовательности строковых последовательностей sequence1 и sequence2
 fun longestCommonSubsequenceLength(sequence1: Array<String>, sequence2: Array<String>): Int {
     val length: Array<Array<Int>> = Array(sequence1.size + 1) { Array(sequence2.size + 1) { 0 } }
     for (it1 in 1 .. sequence1.size)
@@ -22,6 +26,7 @@ fun longestCommonSubsequenceLength(sequence1: Array<String>, sequence2: Array<St
     return length[sequence1.size][sequence2.size]
 }
 
+// // Возвращает наибольшую общую подпоследовательность строковых последовательностей sequence1 и sequence2
 fun longestCommonSubsequence(sequence1: Array<String>, sequence2: Array<String>): Array<String> {
     val length: Array<Array<Int>> = Array(sequence1.size + 1) { Array(sequence2.size + 1) { 0 } }
     for (it1 in 1 .. sequence1.size)
@@ -35,6 +40,7 @@ fun longestCommonSubsequence(sequence1: Array<String>, sequence2: Array<String>)
     val subsequence: Array<String> = Array(length[sequence1.size][sequence2.size]) { "" }
     var it1: Int = sequence1.size
     var it2: Int = sequence2.size
+    // Восстановление ответа
     while (it1 > 0 && it2 > 0) {
         if (sequence1[it1 - 1] == sequence2[it2 - 1]) {
             subsequence[length[it1][it2] - 1] = sequence1[it1 - 1]
@@ -52,6 +58,8 @@ fun longestCommonSubsequence(sequence1: Array<String>, sequence2: Array<String>)
     return subsequence
 }
 
+// Вычисляет разность между последовательностями sequence1 и sequence2 и разбивает её на блоки подряд идущих
+// удаляемых или добавляемых строк и возвращает блоки в виде отсортированного массива по номеру первой строки блока
 fun diff(sequence1: Array<String>, sequence2: Array<String>): List<DiffLineBlock> {
     val subsequence: Array<String> = longestCommonSubsequence(sequence1, sequence2)
     val answer : MutableList<DiffLineBlock> = mutableListOf()
@@ -61,6 +69,7 @@ fun diff(sequence1: Array<String>, sequence2: Array<String>): List<DiffLineBlock
 
     for (itSub in subsequence.indices)
     {
+        // Формируется блок из удаляемых строк
         if (it1 < sequence1.size && sequence1[it1] != subsequence[itSub]) {
             val strings = MutableList(0){""}
             val first = it1 + 1
@@ -71,7 +80,7 @@ fun diff(sequence1: Array<String>, sequence2: Array<String>): List<DiffLineBlock
             answer.add(DiffLineBlock(false,first,last,strings))
         }
         ++it1
-
+        // Формируется блок из добавляемых строк
         if (it2 < sequence2.size && sequence2[it2] != subsequence[itSub]) {
             val strings = MutableList(0){""}
             val first = it2 + 1
@@ -84,6 +93,8 @@ fun diff(sequence1: Array<String>, sequence2: Array<String>): List<DiffLineBlock
         ++it2
 
     }
+    // Формируются блоки из строк последовательностей sequence1 и sequence2, которые идут после последней
+    // строки из subsequence
     if (it1 < sequence1.size) {
         val strings = MutableList(0){""}
         val first = it1 + 1
@@ -103,7 +114,7 @@ fun diff(sequence1: Array<String>, sequence2: Array<String>): List<DiffLineBlock
         val last = it2
         answer.add(DiffLineBlock(true,first,last,strings))
     }
-
+    // Сортирует полученные блоки по номеру первой строки в блоке
     answer.sort()
 
     return answer
