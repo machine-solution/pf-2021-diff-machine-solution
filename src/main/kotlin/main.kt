@@ -125,6 +125,5 @@ fun main() {
     val new = readFileUsingPath("new file")
     println("Do not open a file \"result.txt\" while a program is running")
     writeFileLines("result.txt", diff(old,new))
-    println("You may open a file \"result.txt\", using the next link:")
-    println("C:\\Users\\Dusha\\IdeaProjects\\pf-2021-diff-machine-solution\\result.txt")
+    println("Difference of old- and new-files is located in the file \"result.txt\"")
 }
