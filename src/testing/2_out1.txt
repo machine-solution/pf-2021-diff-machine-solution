@@ -1,0 +1,33 @@
+----------------------------SUCCESS------------------------------------------------------------------------------------
+@ a 30 @
+> import datetime
+@ a 50-51 @
+> traffic_length = 0
+> elapsed_time = datetime.timedelta()
+@ a 70 @
+>     global traffic_length, elapsed_time
+@ a 79-80 @
+>                 traffic_length += len(future_result.content)
+>                 elapsed_time += future_result.elapsed
+@ d 100-101 @
+> UNIV_LIST_RE = re.compile(r'=[\w-]*/')
+> UNIV_LIST_LINK_RE = re.compile(r'href=[\w-]*/index.html>[\w-]*<')
+@ a 106 @
+> UNIV_LIST_LINK_RE = re.compile(r'href=[\w\d-]*/index.html>')
+@ d 107 @
+>             re.findall(UNIV_LIST_RE, s)[0][1:]
+@ a 112 @
+>                 s[len('href='): -len('index.html>')]
+@ d 212 @
+>     log('pages were parsed')
+@ d 235-237 @
+>         'found {:d} people ({:.1f}% of asked)\n' +\
+>         '{:d} university pages failed\n' +\
+>         '{:d} direction pages failed\n'
+@ a 239-242 @
+>         'on web-pages: {:.2f} seconds ({:.2f} mB)\n' +\
+>         'total found people: {:d} ({:.1f}% of asked)\n' +\
+>         'failed university pages: {:d}\n' +\
+>         'failed direction pages: {:d}\n'
+@ a 246 @
+>             elapsed_time.total_seconds(), traffic_length * 1e-6,

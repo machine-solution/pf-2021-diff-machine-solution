@@ -1,0 +1,19 @@
+----------------------------SUCCESS------------------------------------------------------------------------------------
+@ d 95 @
+>         answer.add(DiffLineBlock(true,first,last,strings))
+@ a 95 @
+>         answer.add(DiffLineBlock(false,first,last,strings))
+@ d 105 @
+>         answer.add(DiffLineBlock(false,first,last,strings))
+@ a 105 @
+>         answer.add(DiffLineBlock(true,first,last,strings))
+@ a 128 @
+>         var ind = if (block.first != block.last) "${block.first}-${block.last}" else "${block.first}"
+@ d 129 @
+>             file.appendText('\n' + "@ a ${block.first}-${block.last} @")
+@ a 130 @
+>             file.appendText("\n@ a $ind @")
+@ d 131 @
+>             file.appendText('\n' + "@ d ${block.first}-${block.last} @")
+@ a 132 @
+>             file.appendText("\n@ d $ind @")

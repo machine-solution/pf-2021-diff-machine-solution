@@ -92,7 +92,7 @@ fun diff(sequence1: Array<String>, sequence2: Array<String>): List<DiffLineBlock
             strings.add(sequence1[it1++])
         }
         val last = it1
-        answer.add(DiffLineBlock(false,first,last,strings))
+        answer.add(DiffLineBlock(true,first,last,strings))
     }
 
     if (it2 < sequence2.size) {
@@ -102,7 +102,7 @@ fun diff(sequence1: Array<String>, sequence2: Array<String>): List<DiffLineBlock
             strings.add(sequence2[it2++])
         }
         val last = it2
-        answer.add(DiffLineBlock(true,first,last,strings))
+        answer.add(DiffLineBlock(false,first,last,strings))
     }
 
     answer.sort()
@@ -125,11 +125,10 @@ fun readFileLines(filename: String): Array<String> {
 fun writeFileLines(filename: String, lines: List<DiffLineBlock>) {
     fun writeDiffLineBlock(filename: String, block: DiffLineBlock) {
         val file = File(filename)
-        val ind = if (block.first != block.last) "${block.first}-${block.last}" else "${block.first}"
         if (block.add)
-            file.appendText("\n@ a $ind @")
+            file.appendText('\n' + "@ a ${block.first}-${block.last} @")
         else
-            file.appendText("\n@ d $ind @")
+            file.appendText('\n' + "@ d ${block.first}-${block.last} @")
         for (str in block.strings)
             file.appendText("\n> $str")
     }
