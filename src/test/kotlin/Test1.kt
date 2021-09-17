@@ -1,4 +1,3 @@
-import kotlin.random.Random
 import kotlin.test.*
 
 
@@ -23,12 +22,12 @@ internal class Test1 {
     // if answer is a common subsequence, return answer.size, else return -1
     private fun longestCommonSubsequenceChecker(sequence1: Array<String>, sequence2: Array<String>, answer: Array<String>): Int {
         fun isSubsequence(subsequence: Array<String>, sequence: Array<String>): Boolean {
-            var it1 = 0
+            var it1: Int = 0
             for (it2 in sequence.indices) {
                 if (it1 == subsequence.size)
                     return true
                 if (sequence[it2] == subsequence[it1]) {
-                    it1++
+                    it1++;
                 }
             }
             return it1 == subsequence.size
@@ -47,13 +46,6 @@ internal class Test1 {
             assertEquals(expected, longestCommonSubsequenceChecker(sequence1, sequence2,
                 longestCommonSubsequence(sequence1, sequence2)))
         }
-        fun randomString(): Array<String> {
-            val ans = mutableListOf("")
-            while (Random.nextInt() / 100 == 0) {
-                ans.add((97 + Random.nextInt() / 26).toString())
-            }
-            return ans.toTypedArray()
-        }
 
         checker(0, arrayOf("A", "B", "C"), arrayOf("ABC", "D", "E"))
         checker(2, arrayOf("A", "b", "C"), arrayOf("A", "B", "C"))
@@ -64,11 +56,6 @@ internal class Test1 {
         checker(0, arrayOf("B", "A", "N", "A", "N", "A"), arrayOf())
         checker(3, arrayOf("A", " A", "B", "A ", "B.", "A"), arrayOf("A", "A", "B", "A"))
         checker(4, arrayOf("A", " A", "B", "A ", "B.", "A"), arrayOf("A", " A", "B", "A"))
-        repeat(100) {
-            val sequence1 = randomString()
-            val sequence2 = randomString()
-            checker(longestCommonSubsequenceLength(sequence1, sequence2), sequence1, sequence2)
-        }
     }
 
     @Test
