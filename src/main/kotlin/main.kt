@@ -44,33 +44,6 @@ fun longestCommonSubsequence(sequence1: Array<String>, sequence2: Array<String>)
     return subsequence
 }
 
-fun diff(sequence1: Array<String>, sequence2: Array<String>): Array<String> {
-    val subsequence: Array<String> = longestCommonSubsequence(sequence1, sequence2);
-    val answer = Array<String>(sequence1.size + sequence2.size - subsequence.size){""}
-    var it1: Int = 0
-    var it2: Int = 0
-    var itAns: Int = 0
-
-    for (itSub in subsequence.indices)
-    {
-        while (it1 < sequence1.size && sequence1[it1] != subsequence[itSub]) {
-            answer[itAns++] = "-| " + sequence1[it1++]
-        }
-        ++it1
-
-        while (it2 < sequence2.size && sequence2[it2] != subsequence[itSub]) {
-            answer[itAns++] = "+| " + sequence2[it2++]
-        }
-        ++it2
-
-        answer[itAns++] = ".| " + subsequence[itSub]
-    }
-
-    return answer
-}
-
 fun main(args: Array<String>) {
-//   val diff: Array<String> = diff(arrayOf("(a + b)^2", " = ", "a^2 + b^2", "+ 2ab"), arrayOf("(a + b)^2 = ", "a^2", "+ b^2", "+ 2ab"))
-//    for (it in diff.indices)
-//        println(diff[it])
+
 }
