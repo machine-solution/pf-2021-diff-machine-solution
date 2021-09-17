@@ -45,14 +45,9 @@ fun longestCommonSubsequence(sequence1: Array<String>, sequence2: Array<String>)
     return subsequence
 }
 
-class DiffLine(private val number: Int = 0, val string: String = "") :Comparable<DiffLine> {
-    override fun compareTo(other: DiffLine): Int = this.number.compareTo(other.number)
-    override fun toString(): String = this.string
-}
-
-fun diff(sequence1: Array<String>, sequence2: Array<String>): Array<DiffLine> {
+fun diff(sequence1: Array<String>, sequence2: Array<String>): Array<String> {
     val subsequence: Array<String> = longestCommonSubsequence(sequence1, sequence2)
-    val answer : Array<DiffLine> = Array(sequence1.size + sequence2.size - 2 * subsequence.size){DiffLine()}
+    val answer = Array(sequence1.size + sequence2.size - 2 * subsequence.size){""}
     var it1 = 0
     var it2 = 0
     var itAns = 0
@@ -60,27 +55,18 @@ fun diff(sequence1: Array<String>, sequence2: Array<String>): Array<DiffLine> {
     for (itSub in subsequence.indices)
     {
         while (it1 < sequence1.size && sequence1[it1] != subsequence[itSub]) {
-            answer[itAns++] = DiffLine(it1+1,"${it1 + 1}\t\t-| " + sequence1[it1++])
+            answer[itAns++] = "${it1 + 1}-| " + sequence1[it1++]
         }
         ++it1
 
         while (it2 < sequence2.size && sequence2[it2] != subsequence[itSub]) {
-            answer[itAns++] = DiffLine(it2+1,"${it2 + 1}\t\t+| " + sequence2[it2++])
+            answer[itAns++] = "${it2 + 1}+| " + sequence2[it2++]
         }
         ++it2
 
     }
-    answer.sort()
 
     return answer
-}
-
-fun diffLinesToStrings(diffLines: Array<DiffLine>): Array<String> {
-    val strings = Array(diffLines.size){""}
-    for (it in diffLines.indices)
-        strings[it] = diffLines[it].string
-
-    return strings
 }
 
 fun readFileLines(filename: String): Array<String> {
@@ -100,18 +86,15 @@ fun writeFileLines(filename: String, lines: Array<String>) {
     if (!file.exists()) {
         file.createNewFile()
     }
-    file.writeText("----------------------------SUCCESS------------------------------------------------------------------------------------")
+    file.writeText("----------------------------SUCCESS----------------------------")
     for (it in lines.indices)
         file.appendText('\n' + lines[it])
 }
 
 fun main() {
-    println("Place an old- and new-version of your file in the files \"old.txt\" and \"new.txt\" respectively")
-    println("and press ENTER...")
-    readLine()
     val old = readFileLines("old.txt")
     val new = readFileLines("new.txt")
     println("Do not open a file \"result.txt\" while a program is running")
-    writeFileLines("result.txt", diffLinesToStrings(diff(old,new)))
+    writeFileLines("result.txt", diff(old,new))
     println("You may open a file \"result.txt\" :)")
 }
