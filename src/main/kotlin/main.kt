@@ -121,12 +121,10 @@ fun diff(sequence1: Array<String>, sequence2: Array<String>): List<DiffLineBlock
 }
 
 fun main() {
-    println("Place an old- and new-version of your file in the files \"old.txt\" and \"new.txt\" respectively")
-    println("and press ENTER...")
-    readLine()
-    val old = readFileLines("old.txt")
-    val new = readFileLines("new.txt")
+    val old = readFileUsingPath("old file")
+    val new = readFileUsingPath("new file")
     println("Do not open a file \"result.txt\" while a program is running")
     writeFileLines("result.txt", diff(old,new))
-    println("You may open a file \"result.txt\" :)")
+    println("You may open a file \"result.txt\", using the next link:")
+    println("C:\\Users\\Dusha\\IdeaProjects\\pf-2021-diff-machine-solution\\result.txt")
 }

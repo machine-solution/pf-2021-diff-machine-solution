@@ -37,3 +37,17 @@ fun writeFileLines(filename: String, lines: List<DiffLineBlock>) {
     for (block in lines)
         writeDiffLineBlock(filename, block)
 }
+
+// Просит вводить путь к файлу, называя его fileAlias, пока пользователь не введёт корректный путь
+fun readFileUsingPath(fileAlias: String): Array<String> {
+    println("Enter the path of $fileAlias")
+    var path = readLine()
+    var file = File(path)
+    while (path == null || !file.exists()) {
+        println("The path of file is incorrect. Please, try again.")
+        path = readLine()
+        file = File(path)
+    }
+
+    return readFileLines(path.toString())
+}

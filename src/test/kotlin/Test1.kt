@@ -17,7 +17,8 @@ internal class Test1 {
     }
 
     // if "answer" is a common subsequence, return answer.size, else return -1
-    private fun longestCommonSubsequenceChecker(sequence1: Array<String>, sequence2: Array<String>, answer: Array<String>): Int {
+    private fun longestCommonSubsequenceChecker(sequence1: Array<String>, sequence2: Array<String>,
+                                                answer: Array<String>): Int {
         fun isSubsequence(subsequence: Array<String>, sequence: Array<String>): Boolean {
             var it1 = 0
             for (it2 in sequence.indices) {
