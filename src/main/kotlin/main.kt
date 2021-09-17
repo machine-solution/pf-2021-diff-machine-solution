@@ -121,8 +121,8 @@ fun diff(sequence1: Array<String>, sequence2: Array<String>): List<DiffLineBlock
 }
 
 fun main() {
-    val old = readFileUsingPath("old file")
-    val new = readFileUsingPath("new file")
+    val old = readFileUsingPath("old file ")
+    val new = readFileUsingPath("new file ")
     println("Do not open a file \"result.txt\" while a program is running")
     writeFileLines("result.txt", diff(old,new))
     println("Difference of old- and new-files is located in the file \"result.txt\"")
