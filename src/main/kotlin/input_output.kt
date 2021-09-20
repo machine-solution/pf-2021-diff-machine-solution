@@ -1,16 +1,8 @@
 import java.io.File
 
 // Возвращает содержимое файла filename, разделённое на строки
-fun readFileLines(filename: String): Array<String> {
-    fun readList(filename: String): List<String> {
+fun readFileLines(filename: String): List<String> {
         return File(filename).readLines()
-    }
-    val list: List<String> = readList(filename)
-    val answer = Array(list.size){""}
-    for (it in answer.indices)
-        answer[it] = list[it]
-
-    return answer
 }
 
 // Записывает блоки удалённых и добавленных строк с их заголовками в файл filename
@@ -56,7 +48,7 @@ fun getCorrectPath(fileAlias: String): String {
 }
 
 // Читает файл, путь к которому указал пользователь
-fun readFileUsingPath(fileAlias: String): Array<String> {
+fun readFileUsingPath(fileAlias: String): List<String> {
     val path = getCorrectPath(fileAlias)
     return readFileLines(path)
 }
