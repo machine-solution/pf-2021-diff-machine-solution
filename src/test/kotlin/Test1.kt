@@ -1,3 +1,6 @@
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
+import java.io.PrintStream
 import kotlin.random.Random
 import kotlin.test.*
 
@@ -149,5 +152,46 @@ internal class Test1 {
 
         println("2 comparisons of files with length about n = 3000 lines produced in ${time1 - startTime} ms")
         println("1 comparison produced in about ${"%.6f".format((time1 - startTime)/(2.0*3000*3000))} * n^2 ms\n")
+    }
+}
+
+internal class Test2 {
+    private val standardIn = System.`in`
+    private val streamIn = ByteArrayInputStream((
+            "https:/\n" +
+            "abacaba\n" +
+            "https://yandex.ru/search/?text=ByteArray+kotlin&clid=2270455&banerid=0201004775%3A5468013941095716953%3A6145ba4249c5250037c109c4&win=507&&lr=2\n" +
+            "C:\\Users\\Dusha/IdeaProjects/pf-2021-diff-machine-solution/README.md\n" +
+            "C:\\Users\\Dusha\\IdeaProjects\\pf-2021-diff-machine-solution\\build.gradle.kts\n" +
+            "src\\testing\\1_in1.txt\n" +
+            "C:\\Users\\Dusha\\IdeaProjects\\pf-2021-diff-machine-solution\\gradlew.bat\n" +
+            "C:/Users\\Dusha/IdeaProjects\\pf-2021-diff-machine-solution/src\\main/kotlin\\input_output.kt\n" +
+            "C:\\Users\\Dusha\\IdeaProjects\\pf-2021-diff-machine-solution\\src\\testing\\1_in1.txt\n"
+            ).toByteArray())
+
+    @BeforeTest
+    fun setUp() {
+        System.setIn(streamIn)
+    }
+
+    @AfterTest
+    fun tearDown() {
+        System.setIn(standardIn)
+    }
+
+    @Test
+    fun getCorrectPathTest() {
+        assertEquals("C:\\Users\\Dusha/IdeaProjects/pf-2021-diff-machine-solution/README.md",
+            getCorrectPath("File"))
+        assertEquals("C:\\Users\\Dusha\\IdeaProjects\\pf-2021-diff-machine-solution\\build.gradle.kts",
+            getCorrectPath("File"))
+        assertEquals("src\\testing\\1_in1.txt",
+            getCorrectPath("File"))
+        assertEquals("C:\\Users\\Dusha\\IdeaProjects\\pf-2021-diff-machine-solution\\gradlew.bat",
+            getCorrectPath("File"))
+        assertEquals("C:/Users\\Dusha/IdeaProjects\\pf-2021-diff-machine-solution/src\\main/kotlin\\input_output.kt",
+            getCorrectPath("File"))
+        assertEquals("C:\\Users\\Dusha\\IdeaProjects\\pf-2021-diff-machine-solution\\src\\testing\\1_in1.txt",
+            getCorrectPath("File"))
     }
 }

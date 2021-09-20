@@ -12,6 +12,7 @@ class DiffLineBlock(var add: Boolean, val first: Int = 0, val last: Int = 0,
 }
 
 // Возвращает длину наибольшей общей подпоследовательности строковых последовательностей sequence1 и sequence2
+// Используется в стресс-тестах
 fun longestCommonSubsequenceLength(sequence1: List<String>, sequence2: List<String>): Int {
     val length: MutableList<MutableList<Int>> = MutableList(sequence1.size + 1) { MutableList(sequence2.size + 1) { 0 } }
     for (it1 in 1 .. sequence1.size)
