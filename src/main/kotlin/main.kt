@@ -11,25 +11,10 @@ class DiffLineBlock(var add: Boolean, val first: Int = 0, val last: Int = 0,
         first.compareTo(other.first)
 }
 
-// Возвращает длину наибольшей общей подпоследовательности строковых последовательностей sequence1 и sequence2
-// Используется в стресс-тестах
-fun longestCommonSubsequenceLength(sequence1: List<String>, sequence2: List<String>): Int {
-    val length: MutableList<MutableList<Int>> = MutableList(sequence1.size + 1) { MutableList(sequence2.size + 1) { 0 } }
-    for (it1 in 1 .. sequence1.size)
-        for (it2 in 1 .. sequence2.size) {
-            length[it1][it2] =  if (sequence1[it1 - 1] == sequence2[it2 - 1]) {
-                length[it1 - 1][it2 - 1] + 1 }
-            else {
-                max(length[it1 - 1][it2], length[it1][it2 - 1])
-            }
-        }
-
-    return length[sequence1.size][sequence2.size]
-}
-
-// // Возвращает наибольшую общую подпоследовательность строковых последовательностей sequence1 и sequence2
+// Возвращает наибольшую общую подпоследовательность строковых последовательностей sequence1 и sequence2
 fun longestCommonSubsequence(sequence1: List<String>, sequence2: List<String>): List<String> {
-    val length: MutableList<MutableList<Int>> = MutableList(sequence1.size + 1) { MutableList(sequence2.size + 1) { 0 } }
+    val length: MutableList<MutableList<Int>> = MutableList(sequence1.size + 1)
+        { MutableList(sequence2.size + 1) { 0 } }
     for (it1 in 1 .. sequence1.size)
         for (it2 in 1 .. sequence2.size) {
             length[it1][it2] =  if (sequence1[it1 - 1] == sequence2[it2 - 1]) {

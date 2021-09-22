@@ -1,10 +1,26 @@
 import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.PrintStream
+import kotlin.math.max
 import kotlin.random.Random
 import kotlin.test.*
 
+// Проверяет корректность алгоритма получения ответа и его скорость
 internal class Test1 {
+
+    // Возвращает длину наибольшей общей подпоследовательности строковых последовательностей sequence1 и sequence2
+    // Используется в стресс-тестах
+    private fun longestCommonSubsequenceLength(sequence1: List<String>, sequence2: List<String>): Int {
+        val length: MutableList<MutableList<Int>> = MutableList(sequence1.size + 1) { MutableList(sequence2.size + 1) { 0 } }
+        for (it1 in 1 .. sequence1.size)
+            for (it2 in 1 .. sequence2.size) {
+                length[it1][it2] =  if (sequence1[it1 - 1] == sequence2[it2 - 1]) {
+                    length[it1 - 1][it2 - 1] + 1 }
+                else {
+                    max(length[it1 - 1][it2], length[it1][it2 - 1])
+                }
+            }
+
+        return length[sequence1.size][sequence2.size]
+    }
 
     @Test
     fun longestCommonSubsequenceLengthTest() {
@@ -155,6 +171,7 @@ internal class Test1 {
     }
 }
 
+// Проверяет корректность взаимодействия с пользователем
 internal class Test2 {
     private val standardIn = System.`in`
     private val streamIn = ByteArrayInputStream((
@@ -179,6 +196,7 @@ internal class Test2 {
         System.setIn(standardIn)
     }
 
+    // Проверяем, какие пути программа считает корректным. На других компьютерах тест не сработает
     @Test
     fun getCorrectPathTest() {
         assertEquals("C:\\Users\\Dusha/IdeaProjects/pf-2021-diff-machine-solution/README.md",
