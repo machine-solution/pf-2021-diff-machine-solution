@@ -35,8 +35,8 @@ fun getCorrectPath(fileAlias: String): String {
     println("Enter the path of $fileAlias")
     var path = readLine()
     var file = File(path)
-    while (path == null || !file.isFile) {
-        if (path == null)
+    while (file == null || !file.isFile) {
+        if (file == null)
             println("The path of file is incorrect. Please, try again.")
         else
             println("Unable to convert file to text. Please, the path of another file.")
