@@ -30,6 +30,23 @@ fun writeFileLines(filename: String, lines: List<DiffLineBlock>) {
         writeDiffLineBlock(filename, block)
 }
 
+// Записывает блоки удалённых и добавленных строк с их заголовками на экран
+fun writeScreenLines(lines: List<DiffLineBlock>) {
+    fun writeDiffLineBlock(block: DiffLineBlock) {
+        // Вывод заголовка блока
+        val ind = if (block.first != block.last) "${block.first}-${block.last}" else "${block.first}"
+        if (block.add)
+            print("\n@ a $ind @")
+        else
+            print("\n@ d $ind @")
+        // Вывод содержимого блока
+        for (str in block.strings)
+            print("\n> $str")
+    }
+    for (block in lines)
+        writeDiffLineBlock(block)
+}
+
 // Просит вводить путь к файлу, называя его fileAlias, пока пользователь не введёт корректный путь
 fun getCorrectPath(fileAlias: String): String {
     println("Enter the path of $fileAlias")
