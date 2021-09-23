@@ -1,0 +1,789 @@
+----------------------------SUCCESS------------------------------------------------------------------------------------
+@ d 434 @
+> public class Bot
+@ a 434 @
+> class Bot
+@ d 436-439 @
+>     protected bool broken;
+>     public bool bot_show;
+>     protected System.Random rand = new System.Random();
+>     protected int Players, Treasures, Size, my_id;
+@ a 436-445 @
+>     //constants
+>     protected static readonly string[] types = { "step", "strike", "fire", "throw" };
+>     protected static readonly string[] sides = { "left", "down", "right", "up" };
+>     protected const int STEP = 0, STRIKE = 1, FIRE = 2, THROW = 3;
+>     protected const int LEFT = 0, DOWN = 1, RIGHT = 2, UP = 3, ARITY = 4;
+> 
+>     //variables
+>     public bool broken;
+>     public static string error = "";
+>     protected static System.Random rand = new System.Random();
+@ d 441 @
+>     public virtual void Join(int the_players, int the_treasures, int the_size, int the_id)
+@ d 443-444 @
+>         ansType = "step";
+>         ansSide = Int_to_ansSide(rand.Next(4));
+@ a 447-456 @
+> 
+>     //functions
+>     public virtual void Join(int players, int treasures, int size, int id) { }
+>     public virtual void Update(string type, string side, string result, int id) { }
+> }
+> class Bot_v1 : Bot
+> {
+>     protected const int EXIT = -2, WALL = -1, UNKNOWN = 0, FREE = 1;
+>     protected int Players, Treasures, Size, my_id;
+>     public override void Join(int the_players, int the_treasures, int the_size, int the_id)
+@ a 458-459 @
+>         ansType = types[STEP];
+>         ansSide = sides[rand.Next(ARITY)];
+@ d 461 @
+>         catch
+@ d 466-467 @
+>     public int k, choice;
+>     protected string Int_to_ansSide(int q)
+@ d 469-475 @
+>         string[] s = { "left", "down", "right", "up" };
+>         return s[q];
+>     }
+>     protected int AnsSide_to_int(string m)
+>     {
+>         string[] s = { "left", "down", "right", "up" };
+>         for (int i = 0; i < s.Length; ++i) if (m == s[i]) return i;
+@ a 476 @
+>         catch (System.Exception e)
+@ d 478 @
+>     protected virtual int Can(int a, int b, int k)
+@ a 479 @
+>             error += e.Message + "\n" + e.StackTrace + "\n";
+@ d 480 @
+>         return my_map.Can(a, b, k);
+@ a 482-483 @
+>     protected int k, choice;
+>     protected int side_to_int(string m)
+@ d 482-493 @
+>     protected virtual bool HaveWall_or_Exit(int a, int b)
+>     {
+>         return (Can(a, b, 0) < 0 || Can(a, b, 1) < 0 || Can(a, b, 2) < 0 || Can(a, b, 3) < 0);
+>     }
+>     protected virtual bool Have0(int a, int b)
+>     {
+>         return (Can(a, b, 0) == 0 || Can(a, b, 1) == 0 || Can(a, b, 2) == 0 || Can(a, b, 3) == 0);
+>     }
+>     protected virtual bool Have1(int a, int b)
+>     {
+>         return (Can(a, b, 0) == 1 || Can(a, b, 1) == 1 || Can(a, b, 2) == 1 || Can(a, b, 3) == 1);
+>     }
+@ a 485-487 @
+>         for (int i = 0; i < ARITY; ++i)
+>             if (m == sides[i])
+>                 return i;
+@ a 490-491 @
+>     protected virtual int Can(int a, int b, int k) => my_map.Can(a, b, k);
+>     protected virtual bool Have(int form, int a, int b)
+@ a 493-496 @
+>         for (int i = 0; i < ARITY; ++i)
+>             if (Can(a, b, i) == form)
+>                 return true;
+>         return false;
+@ d 496 @
+>         return (knifes != Check.knifes(my_id) || bullets != Check.bullets(my_id) || armors != Check.armors(my_id) || crackers != Check.crackers(my_id));
+@ a 498 @
+>     protected virtual bool Have(int form) => Have(form, my_map.x, my_map.y);
+@ a 501 @
+>         return knifes != Check.knifes(my_id) || bullets != Check.bullets(my_id) || armors != Check.armors(my_id) || crackers != Check.crackers(my_id);
+@ a 509-515 @
+>     protected virtual void NewBFS()
+>     {
+>         used = new bool[2 * Size, 2 * Size];
+>         p = new int[2 * Size, 2 * Size][];
+>         notExpl = new int[11][];
+>         notExpl_size = 0;
+>     }
+@ d 515 @
+>             int[] v = q.Dequeue(); int z = v[0], t = v[1];
+@ d 518-519 @
+>                 int dx = 0, dy = 0; if (i == 0) dx = -1; if (i == 1) dy = -1; if (i == 2) dx = 1; if (i == 3) dy = 1;
+>                 bool Can = this.Can(z, t, i) == 1;
+@ d 526-527 @
+>                     if (Have0(to[0], to[1]) && notExpl_size < 10)
+>                     { ++notExpl_size; notExpl[notExpl_size] = to; }
+@ a 527-528 @
+>             int[] v = q.Dequeue();
+>             int z = v[0], t = v[1];
+@ a 531-538 @
+>                 int dx = 0, dy = 0;
+> 
+>                 if (i == LEFT) dx = -1;
+>                 else if (i == DOWN) dy = -1;
+>                 else if (i == RIGHT) dx = 1;
+>                 else if (i == UP) dy = 1;
+> 
+>                 bool Can = this.Can(z, t, i) == FREE;
+@ d 532-567 @
+>     protected virtual void BFS(int[,] a)
+>     {
+>         NewBFS();
+>         Queue<int[]> q = new Queue<int[]>();
+>         int[] s = { my_map.x, my_map.y };
+>         q.Enqueue(s);
+>         used[s[0], s[1]] = true;
+>         int[] null_ = { -1, -1 };
+>         p[s[0], s[1]] = null_;
+>         while (q.Count > 0 && notExpl_size < 1)
+>         {
+>             int[] v = q.Dequeue(); int z = v[0], t = v[1];
+>             for (int i = 0; i < 4 && notExpl_size < 1; ++i)
+>             {
+>                 int dx = 0, dy = 0; if (i == 0) dx = -1; if (i == 1) dy = -1; if (i == 2) dx = 1; if (i == 3) dy = 1;
+>                 bool Can = this.Can(z, t, i) == 1;
+>                 int[] to = { z + dx, t + dy };
+>                 if (Can && !used[to[0], to[1]])
+>                 {
+>                     used[to[0], to[1]] = true;
+>                     q.Enqueue(to);
+>                     p[to[0], to[1]] = v;
+>                     if (a[to[0], to[1]] > 0 && notExpl_size < 1)
+>                         if (Check.treasures(a[to[0], to[1]] - 1) > 0)
+>                         { ++notExpl_size; notExpl[notExpl_size] = to; }
+>                 }
+>             }
+>         }
+>     }
+>     protected virtual void NewBFS()
+>     {
+>         used = new bool[2 * Size, 2 * Size];
+>         p = new int[2 * Size, 2 * Size][];
+>         notExpl = new int[11][];
+>         notExpl_size = 0;
+>     }
+@ a 545 @
+>                     if (Have(UNKNOWN, to[0], to[1]) && notExpl_size < 10) { ++notExpl_size; notExpl[notExpl_size] = to; }
+@ a 557 @
+>             path[++path_size] = v;
+@ a 560 @
+>     protected virtual void NewDFS() => used = new bool[2 * Size, 2 * Size];
+@ a 564-565 @
+>         if (knifes > 0 && rand.Next(5) == 0 && Have(FREE)) { ansType = "strike"; ansSide = Random(FREE); choice = 0; }
+>         else if (bullets > 0 && rand.Next(15) == 0 && Have(FREE)) { ansType = "fire"; ansSide = Random(FREE); choice = 0; }
+@ a 574 @
+>                 ansType = "step"; ansSide = sides[t];
+@ d 575-576 @
+>             ++path_size;
+>             path[path_size] = v;
+@ a 579 @
+>                 ansType = "step"; ansSide = sides[rand.Next(ARITY)];
+@ d 579-582 @
+>     protected virtual void NewDFS()
+>     {
+>         used = new bool[2 * Size, 2 * Size];
+>     }
+@ d 586-587 @
+>         if (knifes > 0 && rand.Next(5) == 0 && Have1(x, y)) { ansType = "strike"; ansSide = F(1); choice = 0; }
+>         else if (bullets > 0 && rand.Next(15) == 0 && Have1(x, y)) { ansType = "fire"; ansSide = F(1); choice = 0; }
+@ a 590 @
+>         if (choice == 2 || choice == 3) { ansType = "step"; ansSide = sides[k]; }
+@ a 593-601 @
+>             if (knifes > 0) { ansType = "strike"; ansSide = (Have(FREE, my_map.x, my_map.y)) ? Random(FREE) : Random(UNKNOWN); }
+>             else
+>             {
+>                 ansType = "step";
+>                 ansSide =
+>                     Have(WALL) ? Random(WALL)
+>                     : (Have(EXIT) ? Random(EXIT)
+>                     : sides[rand.Next(ARITY)]);
+>             }
+@ d 596 @
+>                 ansType = "step"; ansSide = Int_to_ansSide(t);
+@ d 601 @
+>                 ansType = "step"; ansSide = Int_to_ansSide(rand.Next(4));
+@ a 607-608 @
+>         if (knifes > 0 && rand.Next(5) == 0 && Have(FREE)) { ansType = "strike"; ansSide = Random(FREE); }
+>         else if (bullets > 0 && rand.Next(15) == 0 && Have(FREE)) { ansType = "fire"; ansSide = Random(FREE); }
+@ d 612 @
+>         if (choice == 2 || choice == 3) { ansType = "step"; ansSide = Int_to_ansSide(k); }
+@ a 612 @
+>             if (my_map.x == my_map.exit[0] && my_map.y == my_map.exit[1] && treasures > 0) { ansSide = sides[my_map.exit[2]]; }
+@ d 615-616 @
+>             if (knifes > 0) { ansType = "strike"; ansSide = (Have1(my_map.x, my_map.y)) ? F(1) : F(0); }
+>             else { ansType = "step"; ansSide = F(-1) != "" ? F(-1) : (F(-2) != "" ? F(-2) : Int_to_ansSide(rand.Next(4))); }
+@ a 619 @
+>             else if (Have(UNKNOWN)) ansSide = Random(UNKNOWN);
+@ d 622-624 @
+>         int x = my_map.x, y = my_map.y;
+>         if (knifes > 0 && rand.Next(5) == 0 && Have1(x, y)) { ansType = "strike"; ansSide = F(1); }
+>         else if (bullets > 0 && rand.Next(15) == 0 && Have1(x, y)) { ansType = "fire"; ansSide = F(1); }
+@ a 627 @
+>             else ansSide = Random(FREE);
+@ d 628 @
+>             if (x == my_map.exit[0] && y == my_map.exit[1] && treasures > 0) { ansSide = Int_to_ansSide(my_map.exit[2]); }
+@ a 630-631 @
+>     protected virtual int Max(int a, int b) => (a > b) ? a : b;
+>     protected virtual int Min(int a, int b) => (a < b) ? a : b;
+@ d 635 @
+>             else if (Have0(x, y)) ansSide = F(0);
+@ a 638 @
+>     protected string random(int form, int i, int j)
+@ a 640-645 @
+>         int[] val = new int[ARITY];
+>         int k = 0;
+>         for (int d = 0; d < ARITY; ++d)
+>             if (Can(i, j, d) == form)
+>                 val[k++] = d;
+>         if (k > 0)
+@ d 643 @
+>             else ansSide = F(1);
+@ d 646-653 @
+>     protected virtual int Max(int a, int b)
+>     {
+>         return (a > b) ? a : b;
+>     }
+>     protected virtual int Min(int a, int b)
+>     {
+>         return (a < b) ? a : b;
+>     }
+@ a 647-648 @
+>             int t = rand.Next(k);
+>             return sides[val[t]];
+@ a 652-655 @
+>     protected virtual string Random(int form)
+>     {
+>         return random(form, my_map.x, my_map.y);
+>     }
+@ d 660 @
+>     protected virtual string F(int w)
+@ a 662 @
+>     public class Map
+@ d 662-665 @
+>         int isW(int q) { if (q == w) return 1; else return 0; }
+>         int i = my_map.x, j = my_map.y;
+>         int sum = isW(Can(i, j, 0)) + isW(Can(i, j, 1)) + isW(Can(i, j, 2)) + isW(Can(i, j, 3)), t;
+>         if (sum != 0)
+@ d 667-687 @
+>             t = rand.Next(sum) + 1;
+>             if (t == 1)
+>             {
+>                 if (Can(i, j, 0) == w) return "left";
+>                 if (Can(i, j, 1) == w) return "down";
+>                 if (Can(i, j, 2) == w) return "right";
+>                 if (Can(i, j, 3) == w) return "up";
+>             }
+>             if (t == 2)
+>             {
+>                 if (Can(i, j, 0) == w && Can(i, j, 1) == w) return "down";
+>                 if ((Can(i, j, 0) == w || Can(i, j, 1) == w) && Can(i, j, 2) == w) return "right";
+>                 if (Can(i, j, 3) == w) return "up";
+>             }
+>             if (t == 3)
+>             {
+>                 if (Can(i, j, 0) == w && Can(i, j, 1) >= w && Can(i, j, 2) == w) return "right";
+>                 if (Can(i, j, 3) == w) return "up";
+>             }
+>             if (t == 4)
+>                 if (Can(i, j, 3) == w) return "up";
+@ a 669-670 @
+>         public int[,,] can_to_move;
+>         void Init(int Size)
+@ a 672 @
+>             size = Size;
+@ a 674 @
+>             minx = maxx = miny = maxy = x = y = size / 2 - 1;
+@ a 676 @
+>             exit = new int[3] { -1, -1, -1 };
+@ a 678 @
+>         public Map(int Size)
+@ a 680 @
+>             Init(Size);
+@ a 682 @
+>         public Map copy()
+@ a 684 @
+>             return new Map(this);
+@ a 686-713 @
+>         Map(Map B)
+>         {
+>             Init(B.size);
+>             B.UpdateBorders();
+>             rank = B.rank;
+>             minx = B.minx; miny = B.miny;
+>             maxx = B.maxx; maxy = B.maxy;
+>             x = B.x; y = B.y;
+>             exit = new int[3] { B.exit[0], B.exit[1], B.exit[2] };
+>             for (int i = 0; i < size; ++i)
+>                 for (int j = 0; j < size; ++j)
+>                 {
+>                     can_to_move[i, j, 0] = B.can_to_move[i, j, 0];
+>                     can_to_move[i, j, 1] = B.can_to_move[i, j, 1];
+>                 }
+>         }
+>         public void Move(int side)
+>         {
+>             if (side == LEFT) { if (x == minx) --minx; --x; }
+>             if (side == DOWN) { if (y == miny) --miny; --y; }
+>             if (side == RIGHT) { if (x == maxx) ++maxx; ++x; }
+>             if (side == UP) { if (y == maxy) ++maxy; ++y; }
+>         }
+>         public int Can(int a, int b, int side)
+>         {
+>             int dx = (side == RIGHT ? 1 : 0), dy = (side == UP ? 1 : 0);
+>             return can_to_move[a + dx, b + dy, side % 2];
+>         }
+@ d 697 @
+>     public struct Map
+@ d 703 @
+>         public int[,,] can_to_move;
+@ d 705 @
+>         public Map(int t)
+@ d 707-708 @
+>             size = t;
+>             minx = maxx = miny = maxy = x = y = size / 2 - 1;
+@ d 711-712 @
+>             exit = new int[3];
+>             exit[0] = -1;
+@ d 714 @
+>         public void Move(int k)
+@ d 716-719 @
+>             if (k == 0) { if (x == minx) --minx; --x; }
+>             if (k == 1) { if (y == miny) --miny; --y; }
+>             if (k == 2) { if (x == maxx) ++maxx; ++x; }
+>             if (k == 3) { if (y == maxy) ++maxy; ++y; }
+@ a 718 @
+>         public void UpdateCan(int res, int side)
+@ a 720-721 @
+>             int dx = (side == RIGHT ? 1 : 0), dy = (side == UP ? 1 : 0);
+>             can_to_move[x + dx, y + dy, side % 2] = res;
+@ d 721 @
+>         public int Can(int a, int b, int k)
+@ d 723-724 @
+>             int dx = (k == 2 ? 1 : 0), dy = (k == 3 ? 1 : 0), t = (k > 1) ? dy : k;
+>             return can_to_move[a + dx, b + dy, t];
+@ a 724 @
+>         public void UpdateCan(int a, int b, int res, int side)
+@ a 726-727 @
+>             int dx = (side == RIGHT ? 1 : 0), dy = (side == UP ? 1 : 0);
+>             can_to_move[a + dx, b + dy, side % 2] = res;
+@ d 730 @
+>         public void UpdateCan(int res, int k)
+@ a 730 @
+>         public void UpdateExit(int side)
+@ a 732 @
+>             exit = new int[3] { x, y, side }; UpdateBorders();
+@ d 732-733 @
+>             int dx = (k == 2 ? 1 : 0), dy = (k == 3 ? 1 : 0), t = (k > 1) ? dy : k;
+>             can_to_move[x + dx, y + dy, t] = res;
+@ a 734 @
+>         public void UpdateExit(int a, int b, int side)
+@ d 736 @
+>         public void UpdateCan(int a, int b, int res, int k)
+@ a 736 @
+>             exit = new int[3] { a, b, side }; UpdateBorders();
+@ a 738 @
+>         public void AddWall(int a, int b, int side)
+@ d 738-739 @
+>             int dx = (k == 2 ? 1 : 0), dy = (k == 3 ? 1 : 0), t = (k > 1) ? dy : k;
+>             can_to_move[a + dx, b + dy, t] = res;
+@ a 740 @
+>             if (can_to_move[a, b, side] == UNKNOWN) UpdateCan(a, b, WALL, side);
+@ d 742 @
+>         public void UpdateExit(int k)
+@ a 742-745 @
+>         public void AddFree(int a, int b, int side)
+>         {
+>             if (can_to_move[a, b, side] == UNKNOWN) UpdateCan(a, b, FREE, side);
+>         }
+@ d 744 @
+>             exit[0] = x; exit[1] = y; exit[2] = k; UpdateBorders();
+@ d 746 @
+>         public void UpdateExit(int a, int b, int k)
+@ d 748 @
+>             exit[0] = a; exit[1] = b; exit[2] = k; UpdateBorders();
+@ d 750 @
+>         void AddWall(int a, int b, int k)
+@ a 750-754 @
+>                 int a = exit[0], b = exit[1], side = exit[2], Size = size / 2;
+>                 bool A = (side == LEFT && (a < 0 || a >= 2 * Size || a + Size < 0 || a + Size >= 2 * Size));
+>                 bool B = (side == DOWN && (b < 0 || b >= 2 * Size || b + Size < 0 || b + Size >= 2 * Size));
+>                 bool C = (side == RIGHT && (a + 1 < 0 || a + 1 >= 2 * Size || a + 1 - Size < 0 || a + 1 - Size >= 2 * Size));
+>                 bool D = (side == UP && (b + 1 < 0 || b + 1 >= 2 * Size || b + 1 - Size < 0 || b + 1 - Size >= 2 * Size));
+@ d 752 @
+>             if (can_to_move[a, b, k] == 0) UpdateCan(a, b, -1, k);
+@ a 758 @
+>                     if (side == LEFT && maxy - miny == Size - 1)
+@ d 758-762 @
+>                 int a = exit[0], b = exit[1], k = exit[2], Size = size / 2;
+>                 bool A = (k == 0 && (a < 0 || a >= 2 * Size || a + Size < 0 || a + Size >= 2 * Size));
+>                 bool B = (k == 1 && (b < 0 || b >= 2 * Size || b + Size < 0 || b + Size >= 2 * Size));
+>                 bool C = (k == 2 && (a + 1 < 0 || a + 1 >= 2 * Size || a + 1 - Size < 0 || a + 1 - Size >= 2 * Size));
+>                 bool D = (k == 3 && (b + 1 < 0 || b + 1 >= 2 * Size || b + 1 - Size < 0 || b + 1 - Size >= 2 * Size));
+@ a 763 @
+>                     else if (side == DOWN && maxx - minx == Size - 1)
+@ d 766 @
+>                     if (k == 0 && maxy - miny == Size - 1)
+@ a 768 @
+>                     else if (side == RIGHT && maxy - miny == Size - 1)
+@ d 771 @
+>                     if (k == 1 && maxx - minx == Size - 1)
+@ a 773 @
+>                     else if (side == UP && maxx - minx == Size - 1)
+@ d 776 @
+>                     if (k == 2 && maxy - miny == Size - 1)
+@ d 781 @
+>                     if (k == 3 && maxx - minx == Size - 1)
+@ a 785 @
+>             exit = new int[3] { -1, -1, -1 };
+@ d 793 @
+>             exit[0] = -1;
+@ a 793-794 @
+>         if (A.rank >= B.rank) return A.copy();
+>         else return B.copy();
+@ a 796 @
+>     protected virtual void Add(Map A, Map B, int a, int b)
+@ d 801 @
+>         if (A.rank < B.rank) return Equating(A, B); else return A;
+@ a 802-803 @
+>                 if (A.x + i < 0 || A.x + i >= 2 * Size || A.y + j < 0 || A.y + j >= 2 * Size) { GetInfoB(); return; }
+>                 if (A.can_to_move[A.x + i, A.y + j, 0] == UNKNOWN)
+@ d 803 @
+>     protected virtual Map Add(Map A, Map B, int a, int b)
+@ a 805 @
+>                 if (A.can_to_move[A.x + i, A.y + j, 1] == UNKNOWN)
+@ d 809-811 @
+>                 if (A.x + i < 0 || A.x + i >= 2 * Size || A.y + j < 0 || A.y + j >= 2 * Size)
+>                 { GetInfoB(); return my_map; }
+>                 if (A.can_to_move[A.x + i, A.y + j, 0] == 0)
+@ d 813 @
+>                 if (A.can_to_move[A.x + i, A.y + j, 1] == 0)
+@ a 817 @
+>             const int l = LEFT, d = DOWN, r = RIGHT, u = UP;
+@ a 821-824 @
+>             if (A.Can(m, n, l) == FREE) if (!used[m - 1, n]) DFS(m - 1, n);
+>             if (A.Can(m, n, d) == FREE) if (!used[m, n - 1]) DFS(m, n - 1);
+>             if (A.Can(m, n, r) == FREE) if (!used[m + 1, n]) DFS(m + 1, n);
+>             if (A.Can(m, n, u) == FREE) if (!used[m, n + 1]) DFS(m, n + 1);
+@ d 828-831 @
+>             if (A.Can(m, n, 0) == 1) if (!used[m - 1, n]) DFS(m - 1, n);
+>             if (A.Can(m, n, 1) == 1) if (!used[m, n - 1]) DFS(m, n - 1);
+>             if (A.Can(m, n, 2) == 1) if (!used[m + 1, n]) DFS(m + 1, n);
+>             if (A.Can(m, n, 3) == 1) if (!used[m, n + 1]) DFS(m, n + 1);
+@ d 835 @
+>         return A;
+@ d 837-851 @
+>     protected virtual Map Equating(Map A, Map B)
+>     {
+>         B.UpdateBorders();
+>         A.minx = B.minx; A.miny = B.miny;
+>         A.maxx = B.maxx; A.maxy = B.maxy;
+>         A.x = B.x; A.y = B.y; A.rank = B.rank;
+>         A.exit[0] = B.exit[0]; A.exit[1] = B.exit[1]; A.exit[2] = B.exit[2];
+>         for (int i = 0; i < A.size; ++i)
+>             for (int j = 0; j < A.size; ++j)
+>             {
+>                 A.can_to_move[i, j, 0] = B.can_to_move[i, j, 0];
+>                 A.can_to_move[i, j, 1] = B.can_to_move[i, j, 1];
+>             }
+>         return A;
+>     }
+@ a 866 @
+>                                     if (C.can_to_move[i, j, 0] == 1) err = 1;
+@ a 871 @
+>                                     if (C.can_to_move[i, j, 1] == 1) err = 1;
+@ d 888 @
+>                                     if (C.can_to_move[i, j, 0] == 1) err = 1;
+@ d 893 @
+>                                     if (C.can_to_move[i, j, 1] == 1) err = 1;
+@ a 932 @
+>     protected virtual bool ConflictRes(int res, int side)
+@ a 934 @
+>         return Can(my_map.x, my_map.y, side) != res && Can(my_map.x, my_map.y, side) != UNKNOWN;
+@ a 936 @
+>     protected virtual bool ConflictMove() => my_map.maxx - my_map.minx >= Size || my_map.maxy - my_map.miny >= Size;
+@ a 943-948 @
+>             if (Have(UNKNOWN, a, b)) return 0;
+>             int sum = 1, L = LEFT, D = DOWN, R = RIGHT, U = UP;
+>             if (Can(a, b, L) == FREE) if (!used[a - 1, b]) { int t = DFS(a - 1, b); if (t == 0) return 0; else sum += t; }
+>             if (Can(a, b, D) == FREE) if (!used[a, b - 1]) { int t = DFS(a, b - 1); if (t == 0) return 0; else sum += t; }
+>             if (Can(a, b, R) == FREE) if (!used[a + 1, b]) { int t = DFS(a + 1, b); if (t == 0) return 0; else sum += t; }
+>             if (Can(a, b, U) == FREE) if (!used[a, b + 1]) { int t = DFS(a, b + 1); if (t == 0) return 0; else sum += t; }
+@ d 955 @
+>     protected virtual bool ConflictRes(int res, int k)
+@ d 957 @
+>         return Can(my_map.x, my_map.y, k) != res && Can(my_map.x, my_map.y, k) != 0;
+@ d 964 @
+>             int sum = 1;
+@ a 965-966 @
+>         if (IsJam())
+>             for (int i = 0; i < Players; ++i) players[i].spy = false;
+@ d 966-970 @
+>             if (Have0(a, b)) return 0;
+>             if (Can(a, b, 0) == 1) if (!used[a - 1, b]) { int t = DFS(a - 1, b); if (t == 0) return 0; else sum += t; }
+>             if (Can(a, b, 1) == 1) if (!used[a, b - 1]) { int t = DFS(a, b - 1); if (t == 0) return 0; else sum += t; }
+>             if (Can(a, b, 2) == 1) if (!used[a + 1, b]) { int t = DFS(a + 1, b); if (t == 0) return 0; else sum += t; }
+>             if (Can(a, b, 3) == 1) if (!used[a, b + 1]) { int t = DFS(a, b + 1); if (t == 0) return 0; else sum += t; }
+@ a 968 @
+>         my_map = players[my_id].B.copy();
+@ d 976-979 @
+>     protected virtual bool ConflictMove()
+>     {
+>         return my_map.maxx - my_map.minx >= Size || my_map.maxy - my_map.miny >= Size;
+>     }
+@ d 991 @
+>         for (int i = 0; i < Players; ++i) players[i].spy = false;
+@ d 993-994 @
+>         my_map = Equating(my_map, players[my_id].B);
+>         bot_show = true;
+@ a 998 @
+>     protected virtual bool SmbLosed()
+@ d 1024 @
+>     public virtual bool SmbLosed()
+@ a 1038 @
+>             if (aftHosp) Add(hosp_map, players[my_id].B, players[my_id].B.x - hosp_map.x, players[my_id].B.y - hosp_map.y);
+@ a 1051 @
+>     public override void Update(string ansType_id, string ansSide_id, string gameAns_id, int id)
+@ a 1057 @
+>                 int game = GameAns(gameAns_id); k = side_to_int(ansSide_id);
+@ d 1064 @
+>             if (aftHosp) hosp_map = Add(hosp_map, players[my_id].B, players[my_id].B.x - hosp_map.x, players[my_id].B.y - hosp_map.y);
+@ d 1077 @
+>     public virtual void Update(string ansType_id, string ansSide_id, string gameAns_id, int id)
+@ d 1083 @
+>                 int game = GameAns(gameAns_id); k = AnsSide_to_int(ansSide_id); bot_show = false;
+@ a 1084 @
+>                                     players[my_id].B = hosp_map.copy();
+@ a 1101 @
+>                                 Add(players[my_id].B, players[id].B, dx, dy);
+@ a 1106 @
+>                                 Add(my_map, players[my_id].B, 0, 0);
+@ d 1110 @
+>                                     players[my_id].B = Equating(players[my_id].B, hosp_map);
+@ d 1127 @
+>                                 players[my_id].B = Add(players[my_id].B, players[id].B, dx, dy);
+@ a 1128-1130 @
+>                                     bool B = players[id].choice != 4 && (id != my_id || choice != 4);
+> 
+>                                     //strike and hit mean that dist(i,id)==1 
+@ d 1132 @
+>                                 my_map = Add(my_map, players[my_id].B, 0, 0);
+@ a 1136 @
+>                                         Add(players[id].B, players[i].B, dx, dy);
+@ a 1139 @
+>                                             Add(my_map, players[my_id].B, 0, 0);
+@ a 1144 @
+> 
+@ a 1149-1150 @
+> 
+>                                     Spy_off(i); //Jam
+@ d 1154 @
+>                                     bool B = (players[id].choice != 4 && (id != my_id || choice != 4));
+@ d 1160 @
+>                                         players[id].B = Add(players[id].B, players[i].B, dx, dy);
+@ d 1163 @
+>                                             my_map = Add(my_map, players[my_id].B, 0, 0);
+@ a 1164-1165 @
+>                                 if (game == 0) { players[my_id].B.UpdateCan(WALL, k); GetInfoB(); } //lose knife
+>                                 else if (game == 2 && SmbLosed())
+@ d 1172 @
+>                                     Spy_off(i);
+@ d 1186-1187 @
+>                                 if (game == 0) { players[my_id].B.UpdateCan(-1, k); GetInfoB(); } //knife
+>                                 if (game == 2 && SmbLosed())
+@ a 1226-1231 @
+>                                     Add(hosp_map, players[id].B, players[id].B.x - Size + 1, players[id].B.y - Size + 1);
+>                                     if (IsJam())
+>                                     {
+>                                         Add(players[id].B, hosp_map, Size - 1 - players[id].B.x, Size - 1 - players[id].B.y);
+>                                         if (!players[id].spy) Spy_on(id);
+>                                     }
+@ d 1248-1250 @
+>                                     hosp_map = Add(hosp_map, players[id].B, players[id].B.x - Size + 1, players[id].B.y - Size + 1);
+>                                     //players[id].B = Add(players[id].B, hosp_map, Size - 1 - players[id].B.x, Size - 1 - players[id].B.y);
+>                                     //if (!players[id].spy) Spy_on(id);
+@ a 1259 @
+>             catch (System.Exception e)
+@ a 1262 @
+>                 error += e.Message + "\n" + e.StackTrace + "\n";
+@ a 1270 @
+>     protected virtual bool IsJam() => false;
+@ d 1278 @
+>             catch
+@ d 1288 @
+>     protected virtual bool IsJam() { return false; }
+@ a 1289-1290 @
+>         ansType = types[type];
+>         ansSide = sides[side];
+@ a 1293 @
+> class Bot_Alice : Bot_v1
+@ a 1299-1300 @
+>         ansType = types[STEP];
+>         ansSide = sides[rand.Next(ARITY)];
+@ d 1307-1311 @
+>         if (type == 0) ansType = "step";
+>         else if (type == 1) ansType = "strike";
+>         else if (type == 2) ansType = "fire";
+>         else if (type == 3) ansType = "throw";
+>         ansSide = Int_to_ansSide(side);
+@ a 1311 @
+>         catch (System.Exception e)
+@ d 1314 @
+> public class Bot_Alice : Bot
+@ a 1314 @
+>             error += e.Message + "\n" + e.StackTrace + "\n";
+@ d 1320-1321 @
+>         ansType = "step";
+>         ansSide = Int_to_ansSide(rand.Next(4));
+@ d 1332 @
+>         catch
+@ a 1357 @
+>                     if (Have(UNKNOWN, to[0], to[1]) && notExpl_size < 10) { ++notExpl_size; notExpl[notExpl_size] = to; }
+@ a 1374-1375 @
+>         if (knifes > 0 && rand.Next(5) == 0 && Have(FREE, x, y)) { ansType = types[STRIKE]; ansSide = Random(FREE); }
+>         else if (bullets > 0 && rand.Next(5) == 0 && Have(FREE, x, y)) { ansType = types[FIRE]; ansSide = Random(FREE); }
+@ d 1377-1378 @
+>                     if (Have0(to[0], to[1]) && notExpl_size < 10)
+>                     { ++notExpl_size; notExpl[notExpl_size] = to; }
+@ a 1382 @
+>             ansType = types[STEP]; ansSide = sides[t];
+@ a 1393 @
+>             ansType = types[STEP]; ansSide = sides[k]; choice = 0;
+@ d 1395-1396 @
+>         if (knifes > 0 && rand.Next(5) == 0 && Have1(x, y)) { ansType = "strike"; ansSide = F(1); }
+>         else if (bullets > 0 && rand.Next(5) == 0 && Have1(x, y)) { ansType = "fire"; ansSide = F(1); }
+@ d 1403 @
+>             ansType = "step"; ansSide = Int_to_ansSide(t);
+@ a 1404 @
+>     protected override string Random(int form) => random(form, x, y);
+@ a 1409-1410 @
+>         if (knifes > 0 && rand.Next(5) == 0 && Have(FREE, x, y) && !A) { ansType = "strike"; ansSide = Random(FREE); }
+>         else if (bullets > 0 && rand.Next(5) == 0 && Have(FREE, x, y) && !A) { ansType = "fire"; ansSide = Random(FREE); }
+@ d 1414 @
+>             ansType = "step"; ansSide = Int_to_ansSide(k); choice = 0;
+@ a 1414 @
+>             if ((x == exit[0] && y == exit[1] && treasures > 0) || (x == exit[0] && y == exit[1] && doubt)) { ansSide = sides[exit[2]]; }
+@ a 1422 @
+>             else if (Have(UNKNOWN, x, y)) ansSide = Random(UNKNOWN);
+@ d 1425-1451 @
+>     protected override string F(int w)
+>     {
+>         int isW(int q) { if (q == w) return 1; else return 0; }
+>         int i = x, j = y;
+>         int sum = isW(Can(i, j, 0)) + isW(Can(i, j, 1)) + isW(Can(i, j, 2)) + isW(Can(i, j, 3)), t = rand.Next(sum) + 1;
+>         if (t == 1)
+>         {
+>             if (Can(i, j, 0) == w) return "left";
+>             if (Can(i, j, 1) == w) return "down";
+>             if (Can(i, j, 2) == w) return "right";
+>             if (Can(i, j, 3) == w) return "up";
+>         }
+>         if (t == 2)
+>         {
+>             if (Can(i, j, 0) == w && Can(i, j, 1) == w) return "down";
+>             if ((Can(i, j, 0) == w || Can(i, j, 1) == w) && Can(i, j, 2) == w) return "right";
+>             if (Can(i, j, 3) == w) return "up";
+>         }
+>         if (t == 3)
+>         {
+>             if (Can(i, j, 0) == w && Can(i, j, 1) >= w && Can(i, j, 2) == w) return "right";
+>             if (Can(i, j, 3) == w) return "up";
+>         }
+>         if (t == 4)
+>             if (Can(i, j, 3) == w) return "up";
+>         return "";
+>     }
+@ a 1433 @
+>                 else ansSide = Random(FREE);
+@ d 1456-1457 @
+>         if (knifes > 0 && rand.Next(5) == 0 && Have1(x, y) && !A) { ansType = "strike"; ansSide = F(1); }
+>         else if (bullets > 0 && rand.Next(5) == 0 && Have1(x, y) && !A) { ansType = "fire"; ansSide = F(1); }
+@ d 1461 @
+>             if ((x == exit[0] && y == exit[1] && treasures > 0) || (x == exit[0] && y == exit[1] && doubt)) { ansSide = Int_to_ansSide(exit[2]); }
+@ d 1469 @
+>             else if (Have0(x, y)) ansSide = F(0);
+@ d 1480 @
+>                 else ansSide = F(1);
+@ a 1517 @
+>                 int game = GameAns(gameAns_id); k = side_to_int(ansSide_id);
+@ a 1530-1532 @
+>                             if (knifes > 0) { ansType = "strike"; ansSide = (Have(FREE, x, y)) ? Random(FREE) : Random(UNKNOWN); }
+>                             else if (bullets > 0) { ansType = "fire"; ansSide = (Have(FREE, x, y)) ? Random(FREE) : Random(UNKNOWN); }
+>                             else { ansType = "step"; ansSide = (Have(WALL, x, y)) ? Random(WALL) : Random(UNKNOWN); }
+@ a 1557-1562 @
+>             catch (System.Exception e)
+>             {
+>                 broken = true;
+>                 randomAns();
+>                 error += e.Message + "\n" + e.StackTrace + "\n";
+>             }
+@ d 1564 @
+>                 int game = GameAns(gameAns_id); k = AnsSide_to_int(ansSide_id);
+@ a 1566 @
+>     protected override bool SmbLosed()
+@ a 1568-1570 @
+>         for (int i = 0; i < Players; ++i)
+>             if (players[i].treasures > Check.treasures(i))
+>                 return true;
+@ a 1574 @
+> class Bot_Bob : Bot_v1
+@ d 1577-1579 @
+>                             if (knifes > 0) { ansType = "strike"; ansSide = (Have1(x, y)) ? F(1) : F(0); }
+>                             else if (bullets > 0) { ansType = "fire"; ansSide = (Have1(x, y)) ? F(1) : F(0); }
+>                             else { ansType = "step"; ansSide = (HaveWall_or_Exit(x, y)) ? F(-1) : F(0); }
+@ a 1578 @
+> class Bot_Jam : Bot_v1
+@ a 1580-1608 @
+>     protected void BFS(int[,] ind)
+>     {
+>         NewBFS();
+>         Queue<int[]> q = new Queue<int[]>();
+>         int[] s = { my_map.x, my_map.y };
+>         q.Enqueue(s);
+>         used[s[0], s[1]] = true;
+>         int[] null_ = { -1, -1 };
+>         p[s[0], s[1]] = null_;
+>         while (q.Count > 0 && notExpl_size < 1)
+>         {
+>             int[] v = q.Dequeue(); int z = v[0], t = v[1];
+>             for (int i = 0; i < 4 && notExpl_size < 1; ++i)
+>             {
+>                 int dx = 0, dy = 0; if (i == 0) dx = -1; if (i == 1) dy = -1; if (i == 2) dx = 1; if (i == 3) dy = 1;
+>                 bool Can = this.Can(z, t, i) == 1;
+>                 int[] to = { z + dx, t + dy };
+>                 if (Can && !used[to[0], to[1]])
+>                 {
+>                     used[to[0], to[1]] = true;
+>                     q.Enqueue(to);
+>                     p[to[0], to[1]] = v;
+>                     if (ind[to[0], to[1]] > 0 && notExpl_size < 1)
+>                         if (Check.treasures(ind[to[0], to[1]] - 1) > 0) { ++notExpl_size; notExpl[notExpl_size] = to; }
+>                 }
+>             }
+>         }
+>     }
+>     protected override bool IsJam() => true;
+@ d 1604 @
+>             catch { broken = true; randomAns(); }
+@ d 1608 @
+>     public override bool SmbLosed()
+@ d 1610 @
+>         for (int i = 0; i < Players; ++i) if (players[i].treasures > Check.treasures(i)) return true;
+@ d 1614 @
+> public class Bot_Bob : Bot
+@ d 1618 @
+> public class Bot_Jam : Bot
+@ a 1619 @
+>     protected override void Spy_off(int id) => players[id].spy = false;
+@ d 1620 @
+>     protected override bool IsJam() { return true; }
+@ d 1631-1634 @
+>     protected override void Spy_off(int id)
+>     {
+>         players[id].spy = false;
+>     }
+@ a 1642 @
+>                             void Win(int xx) { ansSide = sides[xx]; ansType = "strike"; profit = players[i].treasures; choice = 0; hit = true; }
+@ a 1650 @
+>                             void Win(int xx) { ansSide = sides[xx]; ansType = "fire"; profit = players[i].treasures; choice = 0; hit = true; }
+@ d 1657 @
+>                             void Win(int xx) { ansSide = Int_to_ansSide(xx); ansType = "strike"; profit = players[i].treasures; choice = 0; hit = true; }
+@ d 1665 @
+>                             void Win(int xx) { ansSide = Int_to_ansSide(xx); ansType = "fire"; profit = players[i].treasures; choice = 0; hit = true; }
+@ a 1723 @
+> 

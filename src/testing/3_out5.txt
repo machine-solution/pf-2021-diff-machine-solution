@@ -1,0 +1,294 @@
+----------------------------SUCCESS------------------------------------------------------------------------------------
+@ d 5-6 @
+>     protected static readonly string[] types = { "step", "strike", "fire", "throw" };
+>     protected static readonly string[] sides = { "left", "down", "right", "up" };
+@ a 5-6 @
+>     protected static readonly List<string> types = new List<string> { "step", "strike", "fire", "throw" };
+>     protected static readonly List<string> sides = new List<string> { "left", "down", "right", "up" };
+@ a 11 @
+>     public string ansType, ansSide;
+@ d 14 @
+>     public string ansType, ansSide;
+@ d 43 @
+>     protected int[][] notExpl = new int[11][];
+@ a 43 @
+>     protected int[][] notExpl = new int[11][], notWas = new int[11][];
+@ d 47 @
+>     protected int path_size, notExpl_size;
+@ a 47 @
+>     protected int path_size, notExpl_size, notWas_size;
+@ d 77-78 @
+>         void Init(int Size) {
+>             size = Size;
+@ a 77-78 @
+>         public bool[,] was;
+>         public void NewLife() {
+@ d 80 @
+>             minx = maxx = miny = maxy = x = y = size / 2 - 1;
+@ a 80 @
+>             x = y = minx = maxx = miny = maxy = size / 2 - 1;
+@ a 83 @
+>             was = new bool[size, size];
+@ a 85-88 @
+>         void Init(int Size) {
+>             size = Size;
+>             NewLife();
+>         }
+@ a 110 @
+>             was[x, y] = true;
+@ d 163-168 @
+>         public void NewLife() {
+>             minx = maxx = miny = maxy = x = y = size / 2 - 1;
+>             can_to_move = new int[size, size, 2];
+>             exit = new int[3] { -1, -1, -1 };
+>             rank = 0;
+>         }
+@ a 178 @
+>         InitBFS();
+@ d 178-181 @
+>         notExpl = new int[11][];
+>         p = null;
+>         path = null;
+>         used = null;
+@ a 205 @
+>     protected virtual int Can(int a, int b, int k) => my_map.Can(a, b, k);
+@ d 208 @
+>     protected int Can(int a, int b, int k) => my_map.Can(a, b, k);
+@ a 214 @
+>         InitBFS();
+@ d 217-221 @
+>         //init
+>         used = new bool[2 * Size, 2 * Size];
+>         p = new int[2 * Size, 2 * Size][];
+>         notExpl = new int[11][];
+>         notExpl_size = 0;
+@ a 241-242 @
+>                     if (!my_map.was[to[0], to[1]] && notWas_size < 10)
+>                         notWas[++notWas_size] = to;
+@ a 247-253 @
+>     private void InitBFS() {
+>         used = new bool[2 * Size, 2 * Size];
+>         p = new int[2 * Size, 2 * Size][];
+>         notExpl = new int[11][];
+>         notWas = new int[11][];
+>         notExpl_size = notWas_size = path_size = 0;
+>     }
+@ d 309-313 @
+>             else if (notExpl_size > 0) {
+>                 t = rand.Next(rand.Next(notExpl_size)) + 1;
+>                 v[0] = notExpl[t][0]; v[1] = notExpl[t][1];
+>                 Path(v[0], v[1]);
+>                 choice = EXPLORE;
+@ a 311-329 @
+>             else {
+>                 int a = notExpl_size > 0 ? 1 : 0,
+>                     b = notWas_size > 0 ? 2 : 0,
+>                     c = a + b == 0 ? 1 : 0;
+>                 switch (massRand(new int[] { a, b, c })) {
+>                     case 0:
+>                         t = rand.Next(rand.Next(notExpl_size)) + 1;
+>                         v[0] = notExpl[t][0]; v[1] = notExpl[t][1];
+>                         Path(v[0], v[1]);
+>                         choice = EXPLORE;
+>                         break;
+>                     case 1:
+>                         t = rand.Next(rand.Next(notWas_size)) + 1;
+>                         v[0] = notWas[t][0]; v[1] = notWas[t][1];
+>                         Path(v[0], v[1]);
+>                         choice = EXPLORE;
+>                         break;
+>                     default: ansSide = Random(FREE); break;
+>                 }
+@ d 315 @
+>             else ansSide = Random(FREE);
+@ d 344 @
+>             default: return 1;
+@ a 359 @
+>             default: return GO;
+@ a 370-371 @
+>                 if (B.was[B.x - a + i, B.y - b + j])
+>                     A.was[A.x + i, A.y + j] = B.was[B.x - a + i, B.y - b + j];
+@ d 379-381 @
+>     /// <summary>
+>     /// Попытка совместить две карты с вероятностью хотя бы 1/k, обновляет первый аргумент
+>     /// </summary>
+@ a 396 @
+>     /// <summary> Попытка совместить две карты с вероятностью хотя бы 1/k, обновляет первый аргумент </summary>
+@ a 463-464 @
+>                     if (B.was[i, j])
+>                         A.was[x + i, y + j] = B.was[i, j];
+@ d 475 @
+>     protected bool ConflictRes(int res, int side) => Can(my_map.x, my_map.y, side) != res && Can(my_map.x, my_map.y, side) != UNKNOWN;
+@ d 478 @
+>         used = new bool[2 * Size, 2 * Size]; //init
+@ a 492-494 @
+>     protected bool ConflictRes(int res, int side) => 
+>         Can(my_map.x, my_map.y, side) != res && 
+>         Can(my_map.x, my_map.y, side) != UNKNOWN;
+@ a 497 @
+>         bool[,] used = new bool[2 * Size, 2 * Size];
+@ a 525-526 @
+>         if (ConflictMove() || ConflictWall())
+>             Reload();
+@ d 530-531 @
+>                 res = -2;
+>                 if (ConflictRes(res, k)) GetInfoB();
+@ d 541 @
+>             if (choice == TAKE_AFTER_FIRE && (Check.treasures(my_id) > treasures || gameAns == WALL)) choice = NO_CHOICE;
+@ a 551-556 @
+>                 res = EXIT;
+>                 if (ConflictRes(res, k)) {
+>                     GetInfoB();
+>                     if (ConflictRes(res, k))
+>                         Reload();
+>                 }
+@ a 566 @
+>             if (choice == TAKE_AFTER_FIRE && (Check.treasures(my_id) > treasures || gameAns != GO)) choice = NO_CHOICE;
+@ d 733-740 @
+>         int massRand(int[] mr) {
+>             int[] sum = new int[mr.Length + 1];
+>             sum[0] = 0;
+>             for (int i = 0; i < mr.Length; ++i) sum[i + 1] = sum[i] + mr[i];
+>             int x = rand.Next(sum[mr.Length]);
+>             for (int i = 0; i < mr.Length; ++i) if (sum[i] <= x && x < sum[i + 1]) return i;
+>             return -1;
+>         }
+@ a 749-751 @
+>         finally {
+>             checkAns();
+>         }
+@ a 753-757 @
+> 
+>     protected void checkAns() {
+>         if (!types.Contains(ansType) || !sides.Contains(ansSide)) RandomAns();
+>     }
+> 
+@ d 753-758 @
+>     new int[] v = new int[2];
+>     new int[][] notExpl = new int[11][];
+>     new int[,][] p = new int[20, 20][];
+>     new int[][] path = new int[101][];
+>     new bool[,] used = new bool[20, 20];
+>     new int path_size, notExpl_size;
+@ a 765-772 @
+>     protected int massRand(int[] mr) {
+>         int[] sum = new int[mr.Length + 1];
+>         sum[0] = 0;
+>         for (int i = 0; i < mr.Length; ++i) sum[i + 1] = sum[i] + mr[i];
+>         int x = rand.Next(sum[mr.Length]);
+>         for (int i = 0; i < mr.Length; ++i) if (sum[i] <= x && x < sum[i + 1]) return i;
+>         return -1;
+>     }
+@ d 768-781 @
+>     new struct Map {
+>         public int a, b;
+>         public int[,,] can;
+>         public int[] exit;
+>         public Map(int x) {
+>             a = b = -1;
+>             can = new int[x + 1, x + 1, 2];
+>             exit = new int[3];
+>             exit[0] = -1;
+>         }
+>         public void Coord(int x, int y) {
+>             a = x; b = y;
+>         }
+>     }
+@ a 790 @
+>     bool[,] was;
+@ d 790-794 @
+>         notExpl = new int[11][];
+>         p = new int[20, 20][];
+>         path = new int[101][];
+>         used = new bool[20, 20];
+>         path_size = notExpl_size = 0;
+@ a 792 @
+> 
+@ a 805 @
+>         InitBFS();
+@ d 813 @
+>     protected new int Can(int a, int b, int side) {
+@ a 822 @
+>         was = new bool[20, 20];
+@ d 824-828 @
+>         //init
+>         used = new bool[20, 20];
+>         p = new int[20, 20][];
+>         path = new int[101][];
+>         notExpl_size = path_size = 0;
+@ a 825 @
+>     protected override int Can(int a, int b, int side) {
+@ a 834 @
+>         was[x, y] = true;
+@ a 837 @
+>         InitBFS();
+@ a 857-858 @
+>                     if (!was[to[0], to[1]] && notWas_size < 10)
+>                         notWas[++notWas_size] = to;
+@ a 863-870 @
+>     private void InitBFS() {
+>         used = new bool[20, 20];
+>         p = new int[20, 20][];
+>         path = new int[101][];
+>         notExpl = new int[11][];
+>         notWas = new int[11][];
+>         notExpl_size = notWas_size = path_size = 0;
+>     }
+@ d 903-907 @
+>                     if (notExpl_size > 0) {
+>                         t = rand.Next(rand.Next(notExpl_size)) + 1;
+>                         v[0] = notExpl[t][0]; v[1] = notExpl[t][1];
+>                         Path(v[0], v[1]);
+>                         choice = EXPLORE;
+@ d 909 @
+>                     else ansSide = Random(FREE);
+@ d 920 @
+>             default: return 1;
+@ a 922-938 @
+>                     int a = notExpl_size > 0 ? 1 : 0,
+>                         b = notWas_size > 0 ? 2 : 0,
+>                         c = a + b == 0 ? 1 : 0;
+>                     switch (massRand(new int[] { a, b, c })) {
+>                         case 0:
+>                             t = rand.Next(rand.Next(notExpl_size)) + 1;
+>                             v[0] = notExpl[t][0]; v[1] = notExpl[t][1];
+>                             Path(v[0], v[1]);
+>                             choice = EXPLORE;
+>                             break;
+>                         case 1:
+>                             t = rand.Next(rand.Next(notWas_size)) + 1;
+>                             v[0] = notWas[t][0]; v[1] = notWas[t][1];
+>                             Path(v[0], v[1]);
+>                             choice = EXPLORE;
+>                             break;
+>                         default: ansSide = Random(FREE); break;
+@ d 923 @
+>     void updateCan(int res, int k) {
+@ a 950 @
+>             default: return GO;
+@ a 953 @
+>     protected void updateCan(int res, int k) {
+@ d 998 @
+> /// <summary> Бот: version 1.6 </summary>
+@ d 1000 @
+>     /// <summary> Бот: version 1.6 </summary>
+@ a 1020-1022 @
+>         finally {
+>             checkAns();
+>         }
+@ a 1031 @
+> /// <summary> Бот: version 1.7 </summary>
+@ a 1033 @
+>     /// <summary> Бот: version 1.7 </summary>
+@ d 1106 @
+>             if (spy && !hit && choice != TAKE_AFTER_STRIKE && choice != TAKE_AFTER_FIRE 
+@ a 1139 @
+>             if (spy && !hit && choice != TAKE_AFTER_STRIKE && choice != TAKE_AFTER_FIRE
+@ a 1162-1168 @
+> /// <summary> Бот: version 0.1 </summary>
+> public class Bot_Rand: Bot_Bob {
+>     /// <summary> Бот: version 0.1 </summary>
+>     public Bot_Rand() { }
+>     public override void Update(string ansType_id, string ansSide_id, string gameAns_id, int id) 
+>         => RandomAns();
+> }
