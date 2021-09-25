@@ -109,7 +109,6 @@ fun diff(sequence1: List<String>, sequence2: List<String>): List<DiffLineBlock> 
 fun main() {
     val old = readFileUsingPath("old file ")
     val new = readFileUsingPath("new file ")
-//    writeFileUsingPath("result file", diff(old,new))
-    writeScreenLines(diff(old,new))
+    writeResult(diff(old,new))
     println("Program finished! You can open the result file")
 }

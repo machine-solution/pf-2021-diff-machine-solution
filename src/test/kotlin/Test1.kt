@@ -1,4 +1,4 @@
-import java.io.ByteArrayInputStream
+import java.io.*
 import kotlin.math.max
 import kotlin.random.Random
 import kotlin.test.*
@@ -211,5 +211,60 @@ internal class Test2 {
             getCorrectPath("File"))
         assertEquals("C:\\Users\\Dusha\\IdeaProjects\\pf-2021-diff-machine-solution\\src\\testing\\1_in1.txt",
             getCorrectPath("File"))
+    }
+}
+
+internal class Test3 {
+    private val standardOut = System.out
+    private val streamOut = ByteArrayOutputStream()
+    private val standardIn = System.`in`
+    private val streamIn1 = ByteArrayInputStream((
+            "C:\\Users\\Dusha\\IdeaProjects\\pf-2021-diff-machine-solution\\src\\testing\\1_in1.txt\n" +
+                    "C:\\Users\\Dusha\\IdeaProjects\\pf-2021-diff-machine-solution\\src\\testing\\1_in2.txt\n" +
+                    "\n"
+            ).toByteArray())
+    private val streamIn2 = ByteArrayInputStream((
+            "C:\\Users\\Dush\\IdeaProjects\\pf-2021-diff-machine-solution\\src\\testing\\1_in1.txt\n" +
+                    "C:\\Users\\Dusha\\IdeaProjects\\pf-2021-diff-machine-solution\\src\\testing\\1_in1.txt\n" +
+                    "C:\\Users\\Dusha\\IdeaProjects\\pf-2021-diff-machine-solution\\src\\testing\\1_in2.txt\n" +
+                    "C:\\Users\\Dusha\\IdeaProjects\\pf-2021-diff-machine-solution\\src\\testing\\1_out1.txt\n" +
+                    "Yes\n"
+            ).toByteArray())
+    private val streamIn3 = ByteArrayInputStream((
+            "C:\\Users\\Dush\\IdeaProjects\\pf-2021-diff-machine-solution\\src\\testing\\1_in1.txt\n" +
+                    "C:\\Users\\Dusha\\IdeaProjects\\pf-2021-diff-machine-solution\\src\\testing\\1_in1.txt\n" +
+                    "C:\\Users\\Dusha\\IdeaProjects\\pf-2021-diff-machine-solution\\src\\testing\\1_in2.txt\n" +
+                    "C:\\Users\\Dusha\\IdeaProjects\\pf-2021-diff-machine-solution\\src\\testing\\1_out1.txt\n" +
+                    "reenter\n" +
+                    "C:\\Users\\Dusha\\IdeaProjects\\pf-2021-diff-machine-solution\\src\\testing\\1_out2.txt\n" +
+                    "oh, reenter pls\n" +
+                    "\n"
+            ).toByteArray())
+
+
+    @BeforeTest
+    fun setUp() {
+        System.setOut(PrintStream(streamOut))
+    }
+
+    @AfterTest
+    fun tearDown() {
+        System.setOut(standardOut)
+    }
+
+    @Test
+    fun mainTest() {
+        System.setIn(streamIn1)
+        main()
+        assertTrue(streamOut.size() > 500) // Сделан вывод diff на экран
+        streamOut.reset()
+        System.setIn(streamIn2)
+        main()
+        assertTrue(streamOut.size() < 500) // Сделан вывод diff не на экран
+        streamOut.reset()
+        System.setIn(streamIn3)
+        main()
+        assertTrue(streamOut.size() > 500) // Сделан вывод diff на экран
+        System.setIn(standardIn)
     }
 }

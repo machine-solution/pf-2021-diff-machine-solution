@@ -1,4 +1,5 @@
 import java.io.File
+import java.io.IOException
 
 // Цветной вывод
 object Color {
@@ -16,6 +17,9 @@ fun printlnGreen(string: String) {
 }
 fun printlnBlue(string: String) {
     println(Color.ANSI_BLUE + string + Color.ANSI_RESET)
+}
+fun printBlue(string: String) {
+    print(Color.ANSI_BLUE + string + Color.ANSI_RESET)
 }
 
 // Возвращает содержимое файла filename, разделённое на строки
@@ -54,9 +58,9 @@ fun writeScreenLines(lines: List<DiffLineBlock>) {
         // Вывод заголовка блока
         val ind = if (block.first != block.last) "${block.first}-${block.last}" else "${block.first}"
         if (block.add)
-            printlnBlue("\n@ a $ind @")
+            printBlue("\n@ a $ind @")
         else
-            printlnBlue("\n@ d $ind @")
+            printBlue("\n@ d $ind @")
         // Вывод содержимого блока
         if (block.add) {
             for (str in block.strings)
@@ -74,13 +78,10 @@ fun writeScreenLines(lines: List<DiffLineBlock>) {
 fun getCorrectPath(fileAlias: String): String {
     println("Enter the path of $fileAlias")
     var path = readLine()
-    var file = File(path)
-    while (!file.isFile) {
+    while (path == null || !File(path).isFile) {
         println("Unable to convert file to text. Please, the path of another file.")
         path = readLine()
-        file = File(path)
     }
-
     return path.toString()
 }
 
@@ -90,8 +91,54 @@ fun readFileUsingPath(fileAlias: String): List<String> {
     return readFileLines(path)
 }
 
+fun userMeanScr(userAns: String): Boolean {
+    return userAns.isEmpty() || "[s,S][c,C][r,R][e,E][e,E][n,N]".toRegex().matches(userAns)
+}
+
+fun userMeanYes(userAns: String): Boolean {
+    return userAns.isEmpty() || "[y,Y]".toRegex().matches(userAns[0].toString())
+}
+
 // Записывает lines в файл, путь к которому указал пользователь
-fun writeFileUsingPath(fileAlias: String, lines: List<DiffLineBlock>) {
-    val path = getCorrectPath(fileAlias)
-    writeFileLines(path, lines)
+fun writeResult(lines: List<DiffLineBlock>) {
+    println("If you want print result onto screen enter \"scr\", but if you want write result into file enter a file-path")
+    var branch = 0
+    var path: String? = ""
+    while (branch == 0) {
+        path = readLine()
+        if (path == null || userMeanScr(path.toString())) {
+            branch = 1
+            break
+        }
+        if (File(path).exists()) {
+            println("You are trying to rewrite an existing file. It may contain important data. Continue anyway?")
+            println("(press Y to continue anyway, press N to reenter a path...)")
+            val userAns = readLine()
+            if (userAns == null || userMeanYes(userAns)) {
+                branch = 2
+            } else {
+                println("If you want print result onto screen press enter \"scr\", but if you want write result into file enter a file-path")
+                branch = 0
+            }
+        } else {
+            branch = 3
+        }
+    }
+    when (branch) {
+        1 -> writeScreenLines(lines)
+        2 -> writeFileLines(path.toString(), lines)
+        3 -> {
+            try {
+                File(path).createNewFile()
+                writeFileLines(path.toString(), lines)
+            } catch (e: IOException) {
+                // do anything with exceptions
+            } finally {
+                println("An error occurred while creating the file. Probably, you have not enough permissions to create file")
+                println("in this directory or path was not found...")
+            }
+
+        }
+    }
+
 }
