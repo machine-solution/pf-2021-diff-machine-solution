@@ -15,9 +15,16 @@ class DiffLineBlock(var add: Boolean, val first: Int = 0, val last: Int = 0,
 fun longestCommonSubsequence(sequence1: List<String>, sequence2: List<String>): List<String> {
     val length: MutableList<MutableList<Int>> = MutableList(sequence1.size + 1)
         { MutableList(sequence2.size + 1) { 0 } }
+    val hash1 = MutableList(sequence1.size){0}
+    for (it in hash1.indices)
+        hash1[it] = sequence1[it].hashCode()
+    val hash2 = MutableList(sequence2.size){0}
+    for (it in hash2.indices)
+        hash2[it] = sequence2[it].hashCode()
     for (it1 in 1 .. sequence1.size)
         for (it2 in 1 .. sequence2.size) {
-            length[it1][it2] =  if (sequence1[it1 - 1] == sequence2[it2 - 1]) {
+            // если хэши не равны, то сравнения строк не будет
+            length[it1][it2] =  if (hash1[it1 - 1] == hash2[it2 - 1] && sequence1[it1 - 1] == sequence2[it2 - 1]) {
                 length[it1 - 1][it2 - 1] + 1 }
             else {
                 max(length[it1 - 1][it2], length[it1][it2 - 1])
